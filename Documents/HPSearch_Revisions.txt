@@ -1,0 +1,68 @@
+HPSearch.m
+-------------------------------------------------------------------------
+Revision History
+-------------------------------------------------------------------------
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+4 Feb 2009 (SJS):
+	*	Reworked code to allow for saving of protocols
+
+		Protocol data are saved in a mat file named <filename>_protocol.mat
+		The mat file contains a struct called protocol with the following
+		fields:
+
+			protocol.curvetype			type of curve
+			protocol.stimtype				type of stimulus
+			protocol.nreps					# of reps
+			protocol.ITDrangestr			ITD range (string, in form of min:step:max)
+			protocol.ITDrange				ITD range array (via eval(ITDrangestr))
+			protocol.ILDrangestr			ILD range
+			protocol.ILDrange
+			protocol.ABIrangestr			ABI range
+			protocol.ABIrange
+			protocol.FREQrangestr		FREQ range
+			protocol.FREQrange
+			protocol.BCrangestr			BC range (%)
+			protocol.BCrange
+
+		Two functions are used to update the UI and to read the protocol data
+		from the UI.  They are:
+
+			out = readProtocolFromUI(handles)
+
+			out = updateUIFromProtocol(handles, protocol)
+
+		and two callbacks in HPsearch.m are linked to the Protocol menu:
+
+			LoadProtocol_Callback(hObject, eventdata, handles)
+			SaveProtocol_Callback(hObject, eventdata, handles)
+
+	*	Tested functionality of protocol I/O, seems to work okay in terms
+		of UI, still need to verify function with actual running of curves
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+5 Feb 2009 (SJS):
+	*	Created Default_protocol.mat to be loaded on launch
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+5 Feb 2009 (SJS):
+	*	Implementing new data file format
+		
+		Current method of saving a .mat file at the end is bad if something
+		happens during data acquisition (e.g., system or program crash).  
+		This is unacceptible.  
+
+		Going to take model code from rfrand.m program (free-field receptive
+		field script) to rework it.
+
+		Need to define file header format.
+
+		Will save calibration data in <datafilename>.mat file, experiment
+		data will be in <datafilename>.dat file.
+		This will reduce the complexity of writing/reading calibration
+		(heaphone mic *_fr.mat data AND headphone speaker *_cal.mat) data
+		in a cumbersome binary format.  Much easier to save these
+		structures in .mat file for the experiment.
+
