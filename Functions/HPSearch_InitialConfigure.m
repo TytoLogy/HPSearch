@@ -22,6 +22,9 @@
 % To Do:
 %------------------------------------------------------------------------
 
+% each call to HPSearch_init() asks for a specific set of initial data
+% that establishes settings for the various structures used by HPSearch
+
 % load the limits (for stim values, etc) information 
 % using the init routine
 handles.Lim = HPSearch_init('Limits');
