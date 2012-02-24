@@ -35,6 +35,19 @@ function varargout = HPSearch(varargin)
 % End initialization code - DO NOT EDIT
 %--------------------------------------------------------------------------
 
+%------------------------------------------------------------------------
+%------------------------------------------------------------------------
+%  Sharad Shanbhag
+%	sshanbhag@neomed.edu
+%------------------------------------------------------------------------
+% Created: 2006
+%
+% Revisions:
+%------------------------------------------------------------------------
+% To Do:
+%------------------------------------------------------------------------
+%------------------------------------------------------------------------
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -55,6 +68,8 @@ function HPSearch_OpeningFcn(hObject, eventdata, handles, varargin)
 	% Initial setup
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	% load the configuration information, store in config structure
+	% The HPSearch_Configuration.m function file will usually live in the
+	% <tytology path>\TytoSettings\<username\ directory
 	handles.config = HPSearch_Configuration;
 	% run script that processes initial configuration
 	HPSearch_InitialConfigure;
