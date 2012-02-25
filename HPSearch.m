@@ -40,11 +40,11 @@ function varargout = HPSearch(varargin)
 %  Sharad Shanbhag
 %	sshanbhag@neomed.edu
 %------------------------------------------------------------------------
-% Created: 2006
+% Created: 2006 (???)
 %
-% Revisions:
+% Revisions: Many....
 %------------------------------------------------------------------------
-% To Do:
+% To Do:  Much too much...
 %------------------------------------------------------------------------
 %------------------------------------------------------------------------
 
@@ -101,12 +101,15 @@ function HPSearch_OpeningFcn(hObject, eventdata, handles, varargin)
 	guidata(hObject, handles);
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	% check if the tdt lock has been set
+	% Final task is to check if the tdt lock has been set
 	% if so, this might indicate that a program that 
 	% uses the TDT hardware is running or has crashed without
 	% cleaning up
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	% check if the file (path/name stored in handles.config.TDTLOCKFILE)
+	% exists
 	if exist(handles.config.TDTLOCKFILE, 'file')
+		% if so, load it and check status of TDTINIT
 		load(handles.config.TDTLOCKFILE)
 		if TDTINIT
 			% if yes, see if user wants to override
@@ -120,6 +123,7 @@ function HPSearch_OpeningFcn(hObject, eventdata, handles, varargin)
 			end
 		end
 	else
+		% TDTLOCKFILE not found - tell user and continue
 		disp('just a note: tdt lock file not found')
 		disp(['     ' handles.config.TDTLOCKFILE])
 		disp(' ')
@@ -1606,7 +1610,17 @@ function SaveProtocol_Callback(hObject, eventdata, handles)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % allows access to values in settings structures
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+% General procedure for modifying settings:
+% 	(1)	make a local copy of the structure to be changed
+% 	(2)	retrieve limits information using 'LIMITS' option in HPSearch_init()
+% 	(3)	retrieve the list of editable fields in the given structure
+% 				- this is accessed through the HPSearch_SettingsMenuFields()
+% 	(4)	allow user to modify settings via HPSearch_settingsUpdate() function
+% 	(5)	update handles.<struct> to the local copy and commit changes
+% 
+% 	Easy, no?
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	
 %-------------------------------------------------------------------------
 function AnimalSettings_Callback(hObject, eventdata, handles)
 	% first, make local copy of the structure to be changed
