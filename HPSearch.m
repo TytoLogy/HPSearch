@@ -43,6 +43,7 @@ function varargout = HPSearch(varargin)
 % Created: 2006 (???)
 %
 % Revisions: Many....
+%	26 Feb 2012 (SJS): added code to setup paths (taken from SingleMicCal.m)
 %------------------------------------------------------------------------
 % To Do:  Much too much...
 %------------------------------------------------------------------------
@@ -67,9 +68,41 @@ function HPSearch_OpeningFcn(hObject, eventdata, handles, varargin)
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	% Initial setup
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	
+	%----------------------------------------------------------
+	% Setup Paths
+	%----------------------------------------------------------
+	disp([mfilename ': checking paths'])
+	if isempty(which('RPload'))
+		% could not find the RPload.m function (which is in TytoLogy
+		% toolbox) which suggests that the paths are not set or are 
+		% incorrect for this setup.  load the paths using the tytopaths program.
+		%--------
+		% First, store the current path
+		cdir = pwd;
+		% build the path to the user's TytoSettings directory and
+		% change dirs to it.  Run the tytopaths script and then
+		% return to the original ("current") directory
+		pdir = ['C:\TytoLogy\TytoSettings\' getenv('USERNAME')];
+		disp([mfilename ': loading paths using ' pdir])
+		cd(pdir);
+		tytopaths
+		cd(cdir);
+	else
+		disp([mfilename ': paths ok, launching programn'])
+	end
+
+	% load the configuration information, store in config structure
+	if isempty(which('HPSearch_Configuration'))
+		% need to add user config path
+		addpath(['C:\TytoLogy\TytoSettings\' getenv('USERNAME')]);
+	end
+	
+	%----------------------------------------------------------
 	% load the configuration information, store in config structure
 	% The HPSearch_Configuration.m function file will usually live in the
 	% <tytology path>\TytoSettings\<username\ directory
+	%----------------------------------------------------------
 	handles.config = HPSearch_Configuration;
 	% run script that processes initial configuration
 	HPSearch_InitialConfigure;
