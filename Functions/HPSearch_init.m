@@ -35,7 +35,7 @@ function out = HPSearch_init(stype)
 
 %------------------------------------------------------------------------
 %  Sharad Shanbhag
-%	sshanbha@aecom.yu.edu
+%	sshanbhag@neomed.edu
 %------------------------------------------------------------------------
 % Created: 6 August, 2008
 %
@@ -71,6 +71,7 @@ function out = HPSearch_init(stype)
 %								path information
 %	28 April, 2010 (SJS): changed Nreps upper limit from 100 to 500
 %	26 July, 2010 (SJS): added section for RZ5 input and RX6 I/O
+%	01 March, 2012 (SJS):	updated email address, some comments
 %------------------------------------------------------------------------
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -79,22 +80,22 @@ function out = HPSearch_init(stype)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-	%----------------------------------------------------------------------
-	% Get Path Information set in HPSearch_configuration()
-	%----------------------------------------------------------------------
-	% 	gPath = 'H:\Code\TytoLogy\toolbox';
-	% HPSearch_configuration returns a struct of configuration parameters
-	% so assign the output of HPSearch_Configuration to a temporary variable
-	% and save the global root path for TytoLogy project
-	tmpConfig = HPSearch_Configuration;
-	gPath = tmpConfig.TYTOLOGY_ROOT_PATH;
+%----------------------------------------------------------------------
+% Get Path Information set in HPSearch_configuration()
+%----------------------------------------------------------------------
+% 	gPath = 'H:\Code\TytoLogy\toolbox';
+% HPSearch_configuration returns a struct of configuration parameters
+% so assign the output of HPSearch_Configuration to a temporary variable
+% and save the global root path for TytoLogy project
+tmpConfig = HPSearch_Configuration;
+gPath = tmpConfig.TYTOLOGY_ROOT_PATH;
 
-	%----------------------------------------------------------------------
-	% global settings for stimulus delay and duration
-	%----------------------------------------------------------------------
-	gDelay = 50;
-	gDuration = 100;
-	gSpikeWindow = 50;
+%----------------------------------------------------------------------
+% global settings for stimulus delay and duration
+%----------------------------------------------------------------------
+gDelay = 50;
+gDuration = 100;
+gSpikeWindow = 50;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -116,12 +117,16 @@ out.type = stype;
 %----------------------------------------------------------------------
 switch stype
 
+	%----------------------------------------------------------------------
 	% DATAVERSION is version code for output binary file data
+	%----------------------------------------------------------------------
 	case 'DATAVERSION'
 		out = 1.01;
 	
+	%----------------------------------------------------------------------
 	% LIMITS are used for keeping different user-definable variables within
 	% bounds
+	%----------------------------------------------------------------------
 	case {'LIMITS', 'DEFAULT'}		
 		% stimulus limits
 		out.ITD = [-1000 1000];
@@ -166,12 +171,16 @@ switch stype
 		
 		return;
 	
+	%----------------------------------------------------------------------
 	% DISPLAY settings used for GUI, plots, etc
+	%----------------------------------------------------------------------
 	case {'DISPLAY'}
 % 		out.RASTERLIM = 30;
 		out.RasterNumber = 30;
 		
+	%----------------------------------------------------------------------
 	% STIMULUS are initial (default) stimulus parameters
+	%----------------------------------------------------------------------
 	case {'STIMULUS'}
 		out.type = 'NOISE';
 		out.ITD = 0;
@@ -198,8 +207,10 @@ switch stype
 		
 		return;
 
+	%----------------------------------------------------------------------
 	% ANALYSIS are initial settings for spike thresholds, scaling factors
 	% and such things
+	%----------------------------------------------------------------------
 	case {'ANALYSIS'}
 		out.spikeThreshold = 1;
 		out.spikeWindow = 1;
@@ -209,8 +220,10 @@ switch stype
 		out.spikeEndTime = out.spikeStartTime+gSpikeWindow;
 		return;
 	
+	%----------------------------------------------------------------------
 	% CURVE are initial settings for running a curve.  default is presently
 	% set to be ITD curve
+	%----------------------------------------------------------------------
 	case {'CURVE'}
 		out.curvetype = 'itd';
 		out.stimtype = 'noise';
@@ -237,7 +250,9 @@ switch stype
 		out.sAMFREQrangestr = 0;
 		return;
 	
+	%----------------------------------------------------------------------
 	% ANIMAL information
+	%----------------------------------------------------------------------
 	case {'ANIMAL'}
 		out.animalNumber = '000';
 		out.expDate = date;
@@ -249,6 +264,7 @@ switch stype
 		out.comments = '';
 		return;
 		
+	%----------------------------------------------------------------------
 	%--------------------------------------- TDT CONFIGURATION ------------
 	% used to configure the TDT struct.  there are different settings for
 	% different setups (# of input channels, input/output device, etc)
@@ -428,7 +444,33 @@ switch stype
 		%TTL pulse duration (msec)
 		out.TTLPulseDur = 1;
 		return;
-	
+
+	% TDT:RZ-MJR sets up recording from 16 channels of medusa on RZ5
+	% and output from 2 channels on RZ6
+	case {'TDT:RZ-MJR'}
+		out.StimInterval = 100;
+		out.StimDuration = gDuration;
+		out.AcqDuration = 300;
+		out.SweepPeriod = out.AcqDuration + 10;
+		out.StimDelay = gDelay;
+		out.HeadstageGain = 1000;			% gain for headstage
+		out.ScopeChan = 1;					% d/a output channel for monitor
+		out.MonitorChannel = 1;				% monitor channel on Rz5 (from medusa)
+		out.MonitorGain = 1000;				% monitor channel gain
+		out.decifactor = 1;					% factor to reduce input data sample rate
+		out.HPEnable = 1;						% enable HP filter
+		out.HPFreq = 200;						% HP frequency
+		out.LPEnable = 1;						% enable LP filter
+		out.LPFreq = 10000;					% LP frequency
+		out.nChannels = 16;
+		out.InputChannel = zeros(out.nChannels, 1);
+		out.OutputChannel = [1 2];
+		%TTL pulse duration (msec)
+		out.TTLPulseDur = 1;
+		return;
+		
+		
+		
 	% TDT:OWLSCILLATE is used during vestibular stimulation of the owl
 	case{'TDT:OWLSCILLATE'}
 		out.StimInterval = 100;
@@ -454,6 +496,7 @@ switch stype
 		out.TTLPulseDur = 1;
 		return;
 
+	%----------------------------------------------------------------------
 	%--------------------------------------- INDEV CONFIGURATION ----------
 	% Configuration of input device TDT struct (see TDT toolbox for methods
 	% to open, run, configure, interface with TDT hardware)
@@ -539,7 +582,6 @@ switch stype
 		out.status = 0;
 		return;
 
-		
 	
 	% input (spike) device is Medusa on RZ5, 1 channel input
 	case {'INDEV:RZ5_MEDUSA1'}
@@ -552,8 +594,23 @@ switch stype
 		out.Dnum=1;
 		out.C = [];
 		out.status = 0;
-		return;		
+		return;
+
 		
+	% input (spike) device is Medusa on RZ5, 16 channel input
+	case {'INDEV:RZ5_MEDUSA16'}
+		out.Fs = 25000;
+		% set this to wherever the circuits are stored
+		out.Circuit_Path = [gPath '\toolbox\TDT\Circuits\RZ5'];
+		% for recording from 16 Channels
+		out.Circuit_Name = 'RZ5_16ChannelAcquire_zBus';
+		% Dnum = device number - this is for RZ5
+		out.Dnum=1;
+		out.C = [];
+		out.status = 0;
+		return;
+
+	%----------------------------------------------------------------------
 	%--------------------------------------- OUTDEV CONFIGURATION	--------
 	% configuration section for output device
 	%----------------------------------------------------------------------
@@ -601,19 +658,40 @@ switch stype
 		out.status = 0;
 		return;		
 
+	case {'OUTDEV:LOUDSPEAKER_RZ6'}
+		out.Fs = 50000;
+		% set this to wherever the circuits are stored
+		out.Circuit_Path = [gPath '\toolbox\TDT\Circuits\RZ6\50KHz\'];
+		out.Circuit_Name = 'RZ6_SpeakerOutput_zBus';
+		% Dnum = device number - this is for RX6, device 1
+		out.Dnum=1;
+		out.C = [];
+		out.status = 0;
+		return;		
 
-	%--------------------------------------- ------------
+	%----------------------------------------------------------------
+	% Initial Attenuation
+	%----------------------------------------------------------------
 	case {'ATTEN'}
 		out.PA5L = [];
 		out.PA5R = [];
 		return;
-		
+
+	%----------------------------------------------------------------
+	% Stimulus types
+	%----------------------------------------------------------------
 	case 'STIMULUS_TYPES'
 		out = {'NOISE', 'TONE', 'NOISE_L', 'NOISE_R', 'TONE_L', 'TONE_R', 'NULL'}
 	
+	%----------------------------------------------------------------
+	% Curve Types
+	%----------------------------------------------------------------
 	case 'CURVE_TYPES'
 		out = {'ITD', 'ILD', 'Freq', 'BC', 'ABI', 'sAM_Percent', 'sAM_Freq'};
 
+	%----------------------------------------------------------------
+	% Protocol parameters
+	%----------------------------------------------------------------
 	case {'PROTOCOL_FIELDS'}
 		out = {'curvetype', 'stimtype', 'nreps', ...
 					'ITDrangestr', 'ILDrangestr', 'ABIrangestr', ...
@@ -624,6 +702,10 @@ switch stype
 		out = {'ITDrange', 'ILDrange', 'ABIrange', ...
 					'FREQrange', 'BCrange', ...
 					'sAMPCTrange', 'sAMFREQrange'	};
+
+	%----------------------------------------------------------------
+	% Trap unknown input
+	%----------------------------------------------------------------
 	otherwise
 		disp([mfilename ': unknown information type ' stype '...']);
 		dbstack
