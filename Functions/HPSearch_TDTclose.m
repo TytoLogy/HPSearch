@@ -18,11 +18,12 @@ function varargout = HPSearch_TDTclose(handles)
 
 %------------------------------------------------------------------------
 %  Sharad J. Shanbhag
-%	sharad.shanbhag@einstein.yu.edu
+%	sshanbhag@neomed.edu
 %------------------------------------------------------------------------
 % Created: 8 October, 2009 (SJS)
 %
 % Revisions:
+%	30 Mar 2012 (SJS): added RZ6_RZ5 case, changed email
 %------------------------------------------------------------------------
 % TO DO:
 %------------------------------------------------------------------------
@@ -76,6 +77,23 @@ if TDTINIT
 			handles.zBUS.status = zBUSclose(handles.zBUS);
 			TDTINIT = 0;
 			save(handles.config.TDTLOCKFILE, 'TDTINIT');
+			
+		case 'RZ6_RZ5'
+			% turn off the monitor via software trigger 2
+			RPtrig(handles.indev, 2);
+			disp('...closing PA5L')
+			handles.PA5L.status = PA5close(handles.PA5L);
+			disp('...closing PA5R')
+			handles.PA5R.status = PA5close(handles.PA5R);
+			disp('...closing indev')
+			handles.indev.status = RPclose(handles.indev);
+			disp('...closing outdev')
+			handles.outdev.status = RPclose(handles.outdev);
+			disp('...closing zBUS')
+			handles.zBUS.status = zBUSclose(handles.zBUS);
+			TDTINIT = 0;
+			save(handles.config.TDTLOCKFILE, 'TDTINIT');
+	
 		otherwise
 			warning('%s: Unknown configuration string %s', mfilename, handles.config.CONFIGNAME);
 	end

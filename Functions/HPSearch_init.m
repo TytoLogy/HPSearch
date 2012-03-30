@@ -601,7 +601,8 @@ switch stype
 	case {'INDEV:RZ5_MEDUSA16'}
 		out.Fs = 25000;
 		% set this to wherever the circuits are stored
-		out.Circuit_Path = [gPath '\toolbox\TDT\Circuits\RZ5'];
+		%out.Circuit_Path = [gPath '\toolbox\TDT\Circuits\RZ5'];
+		out.Circuit_Path = 'X:\Code\Matlab\dev\TytoLogy\Toolbox\TDTToolbox\Circuits\RZ5';
 		% for recording from 16 Channels
 		out.Circuit_Name = 'RZ5_16ChannelAcquire_zBus';
 		% Dnum = device number - this is for RZ5
@@ -661,7 +662,8 @@ switch stype
 	case {'OUTDEV:LOUDSPEAKER_RZ6'}
 		out.Fs = 50000;
 		% set this to wherever the circuits are stored
-		out.Circuit_Path = [gPath '\toolbox\TDT\Circuits\RZ6\100KHz\'];
+		%out.Circuit_Path = [gPath '\toolbox\TDT\Circuits\RZ6\100KHz\'];
+		out.Circuit_Path = 'X:\Code\Matlab\dev\TytoLogy\Toolbox\TDTToolbox\Circuits\RZ6\100KHz';
 		out.Circuit_Name = 'RZ6_SpeakerOutput_zBus';
 		% Dnum = device number - this is for RX6, device 1
 		out.Dnum=1;
