@@ -18,12 +18,13 @@ function varargout = HPSearch_TDTopen(handles)
 
 %------------------------------------------------------------------------
 %  Sharad J. Shanbhag
-%	sharad.shanbhag@einstein.yu.edu
+%	sshanbhag@neomed.edu
 %------------------------------------------------------------------------
 % Created: 8 October, 2009 (SJS)
 %
 % Revisions:
-%		13 Oct 2009 (SJS): updated documentation
+%	13 Oct 2009 (SJS): updated documentation
+%	30 Mar 2012 (SJS): added RZ6_RZ5 for new RosenLab setup, updated email
 %------------------------------------------------------------------------
 % TO DO:
 %------------------------------------------------------------------------
@@ -198,7 +199,7 @@ if ~TDTINIT || TDTINIT_FORCE
 			% save TDTINIT in lock file
 			save(handles.config.TDTLOCKFILE, 'TDTINIT');
 			
-			
+		%% old RosenLab setup
 		case	'RX6_RZ5'
 			try
 				%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -267,6 +268,76 @@ if ~TDTINIT || TDTINIT_FORCE
 			% save TDTINIT in lock file
 			save(handles.config.TDTLOCKFILE, 'TDTINIT');
 	
-	end
+		%% old RosenLab setup
+		case	'RZ6_RZ5'
+			try
+				%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+				% Initialize zBus control
+				%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+				disp('...starting zBUS...')
+				tmpdev = zBUSinit('GB');
+				handles.zBUS.C = tmpdev.C;
+				handles.zBUS.handle = tmpdev.handle;
+				handles.zBUS.status = tmpdev.status;
+				%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+				% Initialize RZ5/Medusa
+				%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+				disp('...starting Medusa attached to RZ5...')
+				tmpdev = RZ5init('GB');
+				handles.indev.C = tmpdev.C;
+				handles.indev.handle = tmpdev.handle;
+				handles.indev.status = tmpdev.status;
+				%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+				% Initialize RX6_1
+				%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+				disp('...starting RZ6 for headphone output...')
+				tmpdev = RZ6init('GB', handles.outdev.Dnum);
+				handles.outdev.C = tmpdev.C;
+				handles.outdev.handle = tmpdev.handle;
+				handles.outdev.status = tmpdev.status;
+				
+				%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+				% Initialize Attenuators
+				%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+				handles.PA5L = PA5init('GB', 1, read_ui_val(handles.Latten));
+				handles.PA5R = PA5init('GB', 2, read_ui_val(handles.Ratten));
+				%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+				% Loads circuits
+				%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+				handles.indev.status = RPload(handles.indev);
+				handles.outdev.status = RPload(handles.outdev);
+				%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+				% Starts Circuits
+				%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+				inStatus = RPrun(handles.indev);
+				outStatus = RPrun(handles.outdev);
+				%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+				% Get circuit information
+				%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+				% get the input and output sampling rates
+				handles.outdev.Fs = RPsamplefreq(handles.outdev);
+				handles.indev.Fs = RPsamplefreq(handles.indev);
+				% get the tags and values for the circuits
+				tmptags = RPtagnames(handles.outdev);
+				handles.outdev.TagName = tmptags;				
+				tmptags = RPtagnames(handles.indev);
+				handles.indev.TagName = tmptags;
+				%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+				% set the lock
+				%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%				
+				TDTINIT = 1;
+			catch
+				TDTINIT = 0;
+				disp([mfilename ': error starting TDT hardware'])
+				err = lasterror
+				disp(err.message);
+				disp(err.identifier);
+				disp(err.stack);
+			end
+			% save TDTINIT in lock file
+			save(handles.config.TDTLOCKFILE, 'TDTINIT');
+			%------------------------------------------------------------------------
+
+	end		% end of SWITCH
 end
 varargout{1} = handles;

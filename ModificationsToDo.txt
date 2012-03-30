@@ -19,7 +19,7 @@ complicate things in terms of datafile/program mods?
 
 
 
-
+yes, script is better.  add to menu
 
 
 

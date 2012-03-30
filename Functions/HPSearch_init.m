@@ -661,7 +661,7 @@ switch stype
 	case {'OUTDEV:LOUDSPEAKER_RZ6'}
 		out.Fs = 50000;
 		% set this to wherever the circuits are stored
-		out.Circuit_Path = [gPath '\toolbox\TDT\Circuits\RZ6\50KHz\'];
+		out.Circuit_Path = [gPath '\toolbox\TDT\Circuits\RZ6\100KHz\'];
 		out.Circuit_Name = 'RZ6_SpeakerOutput_zBus';
 		% Dnum = device number - this is for RX6, device 1
 		out.Dnum=1;
@@ -670,7 +670,7 @@ switch stype
 		return;		
 
 	%----------------------------------------------------------------
-	% Initial Attenuation
+	% Initial PA% attenuator structs
 	%----------------------------------------------------------------
 	case {'ATTEN'}
 		out.PA5L = [];

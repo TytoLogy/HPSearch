@@ -172,7 +172,9 @@ function varargout = HPSearch_OutputFcn(hObject, eventdata, handles)
 
 %--------------------------------------------------------------------------
 function CloseRequestFcn(hObject, eventdata, handles)
+	% check TDT hardware status
 	if TDTInitStatus(handles)
+		% if hardware is enabled, close the TDT interface object
 		handles = HPSearch_TDTclose(handles);
 		guidata(hObject, handles);
 	end

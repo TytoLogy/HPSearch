@@ -4,6 +4,7 @@ function Fs = HPSearch_medusasettings_16chan(indev, outdev, tdt)
 %------------------------------------------------------------------------
 % sets up TDT settings for HPSearch
 % 
+% this particular version is for input from 16 channel medusa
 %------------------------------------------------------------------------
 % Input Arguments:
 % 	indev			TDT device interface structure
