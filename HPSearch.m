@@ -13,7 +13,7 @@ function varargout = HPSearch(varargin)
 %      existing singleton*.  
 %
 
-% Last Modified by GUIDE v2.5 27-Jan-2010 22:28:40
+% Last Modified by GUIDE v2.5 05-Jun-2012 20:21:21
 
 % Begin initialization code - DO NOT EDIT
 	gui_Singleton = 1;
@@ -49,6 +49,7 @@ function varargout = HPSearch(varargin)
 %------------------------------------------------------------------------
 %------------------------------------------------------------------------
 
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -65,9 +66,9 @@ function varargout = HPSearch(varargin)
 %	details
 %--------------------------------------------------------------------------
 function HPSearch_OpeningFcn(hObject, eventdata, handles, varargin)
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%---------------------------------------------------------------
 	% Initial setup
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%---------------------------------------------------------------
 	
 	%----------------------------------------------------------
 	% Setup Paths
@@ -109,36 +110,43 @@ function HPSearch_OpeningFcn(hObject, eventdata, handles, varargin)
 	% save handles
 	guidata(hObject, handles);
 
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%-------------------------------------
 	% Load Calibration Settings
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%-------------------------------------
 	HPSearch_CalibrationConfigure;
 	guidata(hObject, handles);
 	
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%-------------------------------------
 	% load default protocol and update UI
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%-------------------------------------
 	HPSearch_ProtocolConfigure;
 	guidata(hObject, handles);
 	
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%-------------------------------------
+	% set script Data flag
+	%-------------------------------------
+	handles.ScriptLoaded = 0;
+	handles.script = [];
+	guidata(hObject, handles);
+	
+	%-------------------------------------
 	% update the UI from the stimulus
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%-------------------------------------
 	updateUIfromStim(handles, handles.stim);	
 	handles.StimInterval = 1;
 	
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%-------------------------------------
 	% Update handles structure
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%-------------------------------------
 	handles.output = hObject;
 	guidata(hObject, handles);
 	
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%---------------------------------------------------------
 	% Final task is to check if the tdt lock has been set
 	% if so, this might indicate that a program that 
 	% uses the TDT hardware is running or has crashed without
 	% cleaning up
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%---------------------------------------------------------
 	% check if the file (path/name stored in handles.config.TDTLOCKFILE)
 	% exists
 	if exist(handles.config.TDTLOCKFILE, 'file')
@@ -181,6 +189,7 @@ function CloseRequestFcn(hObject, eventdata, handles)
 	delete(hObject);
 %--------------------------------------------------------------------------
 
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -202,9 +211,9 @@ function TDTEnableButton_Callback(hObject, eventdata, handles)
 	buttonState = read_ui_val(handles.TDTEnableButton);
 	
 	if buttonState
-		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		%---------------------------------------------------------
 		% User pressed button to enable TDT Circuits
-		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		%---------------------------------------------------------
 		% change button to 'initialize' mode settings
 		set(handles.TDTEnableButton, 'ForegroundColor', INITCOLOR);
 		update_ui_str(handles.TDTEnableButton, 'initializing')
@@ -213,9 +222,9 @@ function TDTEnableButton_Callback(hObject, eventdata, handles)
 		handlesReturned = HPSearch_TDTopen(handles);
 		
 		if ~isempty(handlesReturned)
-			%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+			%---------------------------------------------------------
 			% TDT hardware successfully started
-			%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+			%---------------------------------------------------------
 			handles = handlesReturned;
 			guidata(hObject, handles);
 
@@ -227,9 +236,9 @@ function TDTEnableButton_Callback(hObject, eventdata, handles)
 				HPSearch_maskEnable(handles);
 			end
 		else
-			%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+			%---------------------------------------------------------
 			% TDT hardware startup failed
-			%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+			%---------------------------------------------------------
 			warning([mfilename ':HPSearch_TDTopen returned empty value for handles...'])
 			warning([mfilename 'Aborting...'])
 			update_ui_str(handles.TDTEnableButton, 'TDT Enable');
@@ -237,9 +246,9 @@ function TDTEnableButton_Callback(hObject, eventdata, handles)
 		end
 
 	else
-		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		%---------------------------------------------------------
 		% User pressed button to disable (turn off) TDT Circuits
-		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		%---------------------------------------------------------
 		% turn off masking noise
 		if strcmp(handles.config.OUTDEV, 'OUTDEV:HEADPHONES+MASKER')
 			HPSearch_maskEnable(handles);
@@ -252,15 +261,15 @@ function TDTEnableButton_Callback(hObject, eventdata, handles)
 		set(handles.TDTEnableButton, 'ForegroundColor', ENABLECOLOR);
 
 		if ~isempty(handlesReturned)
-			%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+			%-------------------------------------------------------
 			% TDT hardware successfully shut down
-			%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+			%-------------------------------------------------------
 			handles = handlesReturned;
 			guidata(hObject, handles);
 		else
-			%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+			%-------------------------------------------------------
 			% TDT hardware shutdown failure
-			%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+			%-------------------------------------------------------
 			warning([mfilename ':HPSearch_TDTclose returned empty value for handles...'])
 			warning([mfilename 'Aborting...'])
 			update_ui_str('TDT Enable');
@@ -272,6 +281,7 @@ function TDTEnableButton_Callback(hObject, eventdata, handles)
 	guidata(hObject, handles);
 %--------------------------------------------------------------------------
 
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -343,9 +353,9 @@ function MonitorButton_Callback(hObject, eventdata, handles)
 		handles.indev.Fs = Fs(1);
 		handles.outdev.Fs = Fs(2);
 
-		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		%-------------------------------------------------------
 		% Monitor channel parameters
-		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		%-------------------------------------------------------
 		RPsettag(handles.indev, 'MonChan', handles.tdt.MonitorChannel);
 		RPsettag(handles.indev, 'MonitorEnable', 1);
 		RPsettag(handles.indev, 'MonGain', handles.tdt.MonitorGain);	
@@ -422,19 +432,19 @@ function CurveButton_Callback(hObject, eventdata, handles)
 	else
 		disp('Starting curve...');
 	
-		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		%-------------------------------------------------------
 		% relabel the curve button, 
 		% change foreground color, 
 		% enable the Curve button, disable Run button
-		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		%-------------------------------------------------------
 		update_ui_str(hObject, 'Running...');
 		set(hObject, 'ForegroundColor', [1.0 0.0 0.0]);
 		enable_ui(handles.CurveButton);
 		disable_ui(handles.RunButton);
 		
-		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		%-------------------------------------------------------
 		% Get animal, penetration, etc. information
-		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		%-------------------------------------------------------
 		% first, make local copy of the structure to be changed
 		animal= handles.animal;
 		% update date and time
@@ -457,9 +467,9 @@ function CurveButton_Callback(hObject, eventdata, handles)
 			animal = handles.animal;
 		end
 
-		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		%-------------------------------------------------------
 		% Get data filename info
-		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		%-------------------------------------------------------
 		[curvefile, curvepath] = HPCurve_buildOutputDataFileName(handles, exptime);
 		if isequal(curvefile, 0)
 			% user selected "cancel" on the uiputfile dialog box			
@@ -472,9 +482,9 @@ function CurveButton_Callback(hObject, eventdata, handles)
 			return;
 		end
 		
-		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		%-------------------------------------------------------
 		% Build stimulus file name (if save stimulus is requested)
-		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		%-------------------------------------------------------
 		if handles.curve.saveStim
 			% break down data file name
 			[pathstr, dname, ext, versn] = fileparts(curvefile);
@@ -484,9 +494,9 @@ function CurveButton_Callback(hObject, eventdata, handles)
 			guidata(hObject, handles);
 		end
 
-		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		%-------------------------------------------------------
 		% Initialize TDT hardware
-		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		%-------------------------------------------------------
 		% first, update the channel number (SJS, 22 Jun 09)
 		handles.analysis.channelNum = read_ui_val(handles.DisplayChannelCtrl);
 		handles.tdt.MonitorChannel = handles.analysis.channelNum;
@@ -501,29 +511,29 @@ function CurveButton_Callback(hObject, eventdata, handles)
 		% update the curve settings from the UI
 		handles.curve = curveUpdateFromUI(handles);
 
-		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		%-------------------------------------------------------
 		% create a comment parameter
 		% this is a temporary thing, will need to create UI bit for this
-		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		%-------------------------------------------------------
 		handles.comment = 'comment';
 		guidata(hObject, handles);
 
-		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		%-------------------------------------------------------
 		% Monitor channel parameters
-		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		%-------------------------------------------------------
 		RPsettag(handles.indev, 'MonChan', handles.tdt.MonitorChannel);
 		RPsettag(handles.indev, 'MonitorEnable', 1);
 		RPsettag(handles.indev, 'MonGain', handles.tdt.MonitorGain);	
 
-		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		%-------------------------------------------------------
 		% select and get the handle of the RespPlot figure in the main window
-		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		%-------------------------------------------------------
 		H.RespPlot = handles.RespPlot;
 		H.Rasterplot = handles.RasterPlot;
 
-		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		%-------------------------------------------------------
 		% make some local copies of config structs to simplify code
-		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		%-------------------------------------------------------
 		% TDT HW things
 		indev = handles.indev;
 		outdev = handles.outdev;
@@ -536,15 +546,15 @@ function CurveButton_Callback(hObject, eventdata, handles)
 		analysis = handles.analysis;
 		curve = handles.curve;
 
-		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		%-------------------------------------------------------
+		%-------------------------------------------------------
 		%*************** RUN CURVE ****************************
-		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		%-------------------------------------------------------
 		% for new types of curves, edit the 
 		% HPCurve_buildStimCache() function to generate the
 		% appropriate stimulus type(s)
-		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		%-------------------------------------------------------
+		%-------------------------------------------------------
 		
 		% first build stimulus cache
 		[stimcache, curve.trialRandomSequence] = ...
@@ -552,12 +562,12 @@ function CurveButton_Callback(hObject, eventdata, handles)
 		
 		% then run through the stimuli
 		if ~isempty(stimcache)
-			%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+			%-------------------------------------------------------
 			% add some information to the curve struct - this is mostly 
 			% so that the curve information is included when the curve 
 			% struct is written to the data file header by the 
 			% HPCurve_playCache function
-			%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+			%-------------------------------------------------------
 			% randomized sequence for stimuli
 			curve.trialRandomSequence = stimcache.trialRandomSequence;
 			% version code for data file
@@ -585,9 +595,9 @@ function CurveButton_Callback(hObject, eventdata, handles)
 			curvedata = [];
 		end
 
-		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		%-------------------------------------------------------
 		% if we have data, then save curve info
-		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		%-------------------------------------------------------
 		if ~isempty(curvedata) & (curvedata.cancelFlag == 0);
 			% first, build the curvesettings structure from the various
 			% settings structs used in HPSearch
@@ -617,9 +627,9 @@ function CurveButton_Callback(hObject, eventdata, handles)
 			% are already sorted into a [# of test values X # of reps] array
 			save(curvesettingsfile, '-MAT', 'curvesettings', 'curvedata');			
 			
-			%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+			%-------------------------------------------------------
 			% Plot Curve
-			%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+			%-------------------------------------------------------
 			figure
 			errorbar(curvedata.depvars_sort, ...
 								mean(curvedata.spike_counts'), ...
@@ -641,9 +651,9 @@ function CurveButton_Callback(hObject, eventdata, handles)
 		% save handle info
 		guidata(hObject, handles);
 
-		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		%-------------------------------------------------------
 		%re-enable the curve and run buttons
-		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		%-------------------------------------------------------
 		update_ui_str(hObject, 'Run Curve');
 		set(hObject, 'ForegroundColor', [0.0 0.5 0.0]);
 		enable_ui(handles.RunButton);
@@ -653,6 +663,7 @@ function CurveButton_Callback(hObject, eventdata, handles)
 	end
 %--------------------------------------------------------------------------
 
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -920,7 +931,7 @@ function cBCrange_Callback(hObject, eventdata, handles)
 		handles.curve.BCrangestr = tmpstr;
 		handles.curve.BCrange = tmparr;
 		% update # of trials based on # of elements in curve variable
-		if strcmp(upper(handles.curve.curvetype), 'BC')
+		if strcmpi(handles.curve.curvetype, 'BC')
 			handles.curve.nTrials = length(handles.curve.BCrange);
 		end
 		guidata(hObject, handles);
@@ -944,7 +955,7 @@ function csAMPCTrange_Callback(hObject, eventdata, handles)
 		handles.curve.sAMPCTrangestr = tmpstr;
 		handles.curve.sAMPCTrange = tmparr;
 		% update # of trials based on # of elements in curve variable
-		if strcmp(upper(handles.curve.curvetype), 'SAM_PERCENT')
+		if strcmpi(handles.curve.curvetype, 'SAM_PERCENT')
 			handles.curve.nTrials = length(handles.curve.sAMPCTrange);
 		end
 		guidata(hObject, handles);
@@ -968,7 +979,7 @@ function csAMFREQrange_Callback(hObject, eventdata, handles)
 		handles.curve.sAMFREQrangestr = tmpstr;
 		handles.curve.sAMFREQrange = tmparr;
 		% update # of trials based on # of elements in curve variable
-		if strcmp(upper(handles.curve.curvetype), 'SAM_FREQ')
+		if strcmpi(handles.curve.curvetype, 'SAM_FREQ')
 			handles.curve.nTrials = length(handles.curve.sAMFREQrange);
 		end
 		guidata(hObject, handles);
@@ -980,7 +991,7 @@ function csAMFREQrange_Callback(hObject, eventdata, handles)
 %--------------------------------------------------------------------------
 
 
-
+%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1089,7 +1100,7 @@ function F_Callback(hObject, eventdata, handles)
 % 1) max and min F will depend on BW (bandwidth) AND calibration max and min
 	handles.stim.F = slider_update(handles.F, handles.Ftext);
 	
-	if sum(strcmp(upper(handles.stim.type), {'NOISE', 'SAM'}))
+	if sum(strcmpi(handles.stim.type, {'NOISE', 'SAM'}))
 		maxF = floor(handles.stim.F + handles.stim.BW/2);
 		minF = ceil(handles.stim.F - handles.stim.BW/2);
 		
@@ -1114,7 +1125,7 @@ function F_Callback(hObject, eventdata, handles)
 function Ftext_Callback(hObject, eventdata, handles)
 	handles.stim.F = text_update(handles.Ftext, handles.F, handles.Lim.F);
 	
-	if sum(strcmp(upper(handles.stim.type), {'NOISE', 'SAM'}))
+	if sum(strcmpi(handles.stim.type, {'NOISE', 'SAM'}))
 		maxF = floor(handles.stim.F + handles.stim.BW/2);
 		minF = ceil(handles.stim.F - handles.stim.BW/2);
 		if minF < handles.Lim.F(1)
@@ -1164,7 +1175,7 @@ function BW_Callback(hObject, eventdata, handles)
 	handles.stim.Flo = tmpfmin;
 	handles.stim.Fhi = tmpfmax;
 	
-	if sum(strcmp(upper(handles.stim.type), {'NOISE', 'SAM'}))
+	if sum(strcmpi(handles.stim.type, {'NOISE', 'SAM'}))
 		update_ui_str(handles.FreqMaxtext, tmpfmax);
 		update_ui_str(handles.FreqMintext, tmpfmin);
 	else
@@ -1202,7 +1213,7 @@ function BWtext_Callback(hObject, eventdata, handles)
 	handles.stim.Flo = tmpfmin;
 	handles.stim.Fhi = tmpfmax;
 	
-	if sum(strcmp(upper(handles.stim.type), {'NOISE', 'SAM'}))
+	if sum(strcmpi(handles.stim.type, {'NOISE', 'SAM'}))
 		update_ui_str(handles.FreqMaxtext, tmpfmax);
 		update_ui_str(handles.FreqMintext, tmpfmin);
 	else
@@ -1236,7 +1247,7 @@ function FreqMaxtext_Callback(hObject, eventdata, handles)
 	handles.stim.Fhi = newVal;
 	update_ui_str(handles.FreqMaxtext, newVal);
 	
-	if sum(strcmp(upper(handles.stim.type), {'NOISE', 'SAM'}))
+	if sum(strcmpi(handles.stim.type, {'NOISE', 'SAM'}))
 		% recalculate BW
 		handles.stim.BW = handles.stim.Fhi - handles.stim.Flo;
 		handles.stim.F = handles.stim.Flo + round(handles.stim.BW / 2);
@@ -1263,14 +1274,12 @@ function FreqMintext_Callback(hObject, eventdata, handles)
 		errordlg({'FreqMin must be numeric!', ...
 						'Reverting to original value...'}, ...
 						'Freq Min Value Error')
-		newVal = origVal;
 		update_ui_str(handles.FreqMintext, origVal);
 		return
 	elseif newVal <= handles.Lim.F(1)
 		errordlg({sprintf('FreqMin must be greater than %d', handles.Lim.F(1)), ...
 						'Reverting to original value...'}, ...
 						'Freq Min Value out of bounds')
-		newVal = origVal;
 		update_ui_str(handles.FreqMintext, origVal);
 		return
 	end
@@ -1278,7 +1287,7 @@ function FreqMintext_Callback(hObject, eventdata, handles)
 	handles.stim.Flo = newVal;
 	update_ui_str(handles.FreqMintext, newVal);
 	
-	if sum(strcmp(upper(handles.stim.type), {'NOISE', 'SAM'}))
+	if sum(strcmpi(handles.stim.type, {'NOISE', 'SAM'}))
 		% recalculate BW
 		handles.stim.BW = handles.stim.Fhi - handles.stim.Flo;
 		handles.stim.F = handles.stim.Flo + round(handles.stim.BW / 2);
@@ -1379,7 +1388,7 @@ function sAMFreqtext_Callback(hObject, eventdata, handles)
 	guidata(hObject, handles);
 %--------------------------------------------------------------------------
 
-
+%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1497,7 +1506,7 @@ function handler_Callback(hObject, eventdata, handles)
 	handles.animal
 %-------------------------------------------------------------------------
 	
-
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1640,6 +1649,39 @@ function SaveProtocol_Callback(hObject, eventdata, handles)
 	end
 %-------------------------------------------------------------------------
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SCRIPT Menu
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%--------------------------------------------------------------------
+function LoadScript_Callback(hObject, eventdata, handles)
+	% check if the user's settings/protocol path is valid
+	% if not, use the current directory
+	if ~exist(handles.config.TYTOLOGY_SCRIPT_PATH, 'dir')
+		[scriptpath, scriptfile] = uigetfile('*_script.mat', 'Load experiment script from file');
+	else
+		current_dir = pwd;
+		cd(handles.config.TYTOLOGY_PROTOCOL_PATH);
+		[scriptpath, scriptfile] = uigetfile('*_script.mat', 'Load experiment script from file');
+		cd(current_dir);
+	end
+	
+	if script ~= 0
+		scriptfilepath = fullfile(scriptpath, scriptfile);
+		tmp = load(scriptfilepath, '-MAT');
+		handles.script = tmp.script;
+		handles.ScriptLoaded = 1;
+		guidata(hObject, handles)
+	end
+%--------------------------------------------------------------------
+
+
+%--------------------------------------------------------------------
+function RunScript_Callback(hObject, eventdata, handles)
+	HPSearch_RunScript;
+%--------------------------------------------------------------------
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SETTINGS Menu
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1730,6 +1772,7 @@ function DisplaySettings_Callback(hObject, eventdata, handles)
 	end
 %-------------------------------------------------------------------------
 
+%% 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

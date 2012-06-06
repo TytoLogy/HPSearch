@@ -2,7 +2,8 @@ function [curvedata, rawdata] = HPCurve_playCache(stimcache, datafile, curve, st
 %--------------------------------------------------------------------------
 % [curvedata, rawdata] = HPCurve_playCache(stimcache, curve, stim, tdt, analysis, caldata, indev, outdev, PA5, zBUS, iofunction, varargin)
 %--------------------------------------------------------------------------
-% 
+% HPSearch Application
+%--------------------------------------------------------------------------
 % Runs through stimuli in stimcache
 %
 %--------------------------------------------------------------------------
@@ -37,7 +38,7 @@ function [curvedata, rawdata] = HPCurve_playCache(stimcache, datafile, curve, st
 %--------------------------------------------------------------------------
 % Sharad J. Shanbhag & Jose Luis Pena
 % 
-% sharad.shanbhag@einstein.yu.edu
+% sshanbhag@neomed.edu
 % jpena@aecom.yu.edu
 %--------------------------------------------------------------------------
 % Revision History:
@@ -50,7 +51,8 @@ function [curvedata, rawdata] = HPCurve_playCache(stimcache, datafile, curve, st
 % 				old: was adding tdt.StimDelay to the spike_times, for
 % 						reasons that are mysterious.
 % 				new: add analysis.spikeStarttime as offset due to the
-%						start of the analysis window	
+%						start of the analysis window
+%	5 Jun 2012 (SJS): updated email address
 %--------------------------------------------------------------------------
 % TO DO:
 %	- make fully useful with 16 channels of spike data

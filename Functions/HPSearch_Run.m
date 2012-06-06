@@ -16,7 +16,7 @@
 
 %------------------------------------------------------------------------
 %  Sharad Shanbhag
-%	sharad.shanbhag@einstein.yu.edu
+%	sshanbhag@neomed.edu
 %------------------------------------------------------------------------
 % Created: 28 January, 2009
 %
@@ -31,6 +31,7 @@
 % 		-	added code to deal with situation in which 1 channel of 
 % 			data is being recorded from medusa (and hence iofunction() 
 % 			returns a vector and not a matrix)
+%	5 Jun 2012 (SJS): updated email address
 %------------------------------------------------------------------------
 % To Do:
 %	- display channel - only shows channel 1 at the moment!
