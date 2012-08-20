@@ -13,7 +13,7 @@ function varargout = HPSearch(varargin)
 %      existing singleton*.  
 %
 
-% Last Modified by GUIDE v2.5 05-Jun-2012 20:21:21
+% Last Modified by GUIDE v2.5 20-Aug-2012 18:13:18
 
 % Begin initialization code - DO NOT EDIT
 	gui_Singleton = 1;
@@ -68,17 +68,45 @@ function varargout = HPSearch(varargin)
 function HPSearch_OpeningFcn(hObject, eventdata, handles, varargin)
 	%---------------------------------------------------------------
 	% Initial setup
-	%%---------------------------------------------------------------
+	% ***** need to update this information!!!!!
+	% This consists of a few things:
+	% 	(1) check and, if necessary, set paths
+	% 	(2) read in hardware configuration
+	% 		
+	%---------------------------------------------------------------
+
+	
+	%---------------------------------------------------------------
+	% some constants
+	%---------------------------------------------------------------
+	FORCE_INITPATHS = 0;
+
+	%---------------------------------------------------------------
+	% first off, need to process varargin
+	%---------------------------------------------------------------
+	if ~isempty(varargin)
+		v = 1;
+		while v <= length(varargin)
+			if strcmpi(varargin{v}, 'InitPaths')
+				FORCE_INITPATHS = 1;
+				v = v + 1;
+			else
+				warning('%s: Unknown option %s', mfilename, varargin{v});
+				v = v + 1;
+			end
+		end
+	end
+
 	
 	%----------------------------------------------------------
 	% Setup Paths
 	%----------------------------------------------------------
 	disp([mfilename ': checking paths'])
-	if isempty(which('RPload'))
+	if isempty(which('RPload')) || FORCE_INITPATHS
 		% could not find the RPload.m function (which is in TytoLogy
 		% toolbox) which suggests that the paths are not set or are 
 		% incorrect for this setup.  load the paths using the tytopaths program.
-		%--------
+		
 		% First, store the current path
 		cdir = pwd;
 		% build the path to the user's TytoSettings directory and
@@ -89,7 +117,13 @@ function HPSearch_OpeningFcn(hObject, eventdata, handles, varargin)
 		cd(pdir);
 		tytopaths
 		cd(cdir);
+		% now recheck
+		if isempty(which('RPload'))
+			error('%s: tried setting paths via %s, but failed.  sorry.', ...
+						mfilename, [pdir '\tytopaths.m']);
+		end
 	else
+		% seems okay, so continue
 		disp([mfilename ': paths ok, launching programn'])
 	end
 
@@ -392,7 +426,7 @@ function CurveButton_Callback(hObject, eventdata, handles)
 	%	if 0, then user is stopping/cancelling run
 	state = read_ui_val(hObject);
 	
-	disp(sprintf('curve button state %d, TDTinitstatus %d', state, TDTInitStatus(handles)))
+	fprintf('curve button state %d, TDTinitstatus %d', state, TDTInitStatus(handles));
 	
 	%------------------------------------------------------------------
 	% user wants to start run, but TDT hardware is not started
@@ -487,7 +521,7 @@ function CurveButton_Callback(hObject, eventdata, handles)
 		%-------------------------------------------------------
 		if handles.curve.saveStim
 			% break down data file name
-			[pathstr, dname, ext, versn] = fileparts(curvefile);
+			[pathstr, dname, ext] = fileparts(curvefile);
 			% append "_stim" to the filename
 			stimfile = [pathstr filesep dname '_stim' '.mat'];
 			handles.curve.stimfile = stimfile;
@@ -615,7 +649,7 @@ function CurveButton_Callback(hObject, eventdata, handles)
 			curvesettings.stimcache = rmfield(stimcache, 'Sn');
 
 			% extract the file name parts from the filename
-			[nullpath, curvename, nullext, nullversion] = fileparts(curvefile);
+			[nullpath, curvename, nullext] = fileparts(curvefile);
 
 			% build the curve settings file path
 			curvesettingsfile = fullfile(curvepath, [curvename '.mat']);
@@ -827,7 +861,7 @@ function cITDrange_Callback(hObject, eventdata, handles)
 		handles.curve.ITDrangestr = tmpstr;
 		handles.curve.ITDrange = tmparr;
 		% update # of trials based on # of elements in curve variable
-		if strcmp(upper(handles.curve.curvetype), 'ITD')
+		if strcmpi(handles.curve.curvetype, 'ITD')
 			handles.curve.nTrials = length(handles.curve.ITDrange);
 		end
 		guidata(hObject, handles);
@@ -859,7 +893,7 @@ function cILDrange_Callback(hObject, eventdata, handles)
 		handles.curve.ILDrangestr = tmpstr;
 		handles.curve.ILDrange = tmparr;
 		% update # of trials based on # of elements in curve variable
-		if strcmp(upper(handles.curve.curvetype), 'ILD')
+		if strcmpi(handles.curve.curvetype, 'ILD')
 			handles.curve.nTrials = length(handles.curve.ILDrange);
 		end
 		guidata(hObject, handles);
@@ -883,7 +917,7 @@ function cABIrange_Callback(hObject, eventdata, handles)
 		handles.curve.ABIrangestr = tmpstr;
 		handles.curve.ABIrange = tmparr;
 		% update # of trials based on # of elements in curve variable
-		if strcmp(upper(handles.curve.curvetype), 'ABI')
+		if strcmpi(handles.curve.curvetype, 'ABI')
 			handles.curve.nTrials = length(handles.curve.ABIrange);
 		end
 		guidata(hObject, handles);
@@ -907,7 +941,7 @@ function cFREQrange_Callback(hObject, eventdata, handles)
 		handles.curve.FREQrangestr = tmpstr;
 		handles.curve.FREQrange = tmparr;
 		% update # of trials based on # of elements in curve variable
-		if strcmp(upper(handles.curve.curvetype), 'FREQ')
+		if strcmpi(handles.curve.curvetype, 'FREQ')
 			handles.curve.nTrials = length(handles.curve.FREQrange);
 		end
 		guidata(hObject, handles);
@@ -1471,41 +1505,6 @@ function DisplayChannelCtrl_Callback(hObject, eventdata, handles)
 	guidata(hObject, handles);
 %-------------------------------------------------------------------------
 
-% --- Executes on button press in handler.
-function handler_Callback(hObject, eventdata, handles)
-	disp('HPSearch: Handle information')
-	disp('----------------------------')
-	disp('hObject:')
-	hObject
-	disp('----------------------------')
-	disp('eventdata:')
-	eventdata
-	disp('----------------------------')
-	disp('handles:')
-	handles
-	disp('----------------------------')
-	disp('handles.config:')
-	handles.config
-	disp('----------------------------')
-	disp('handles.Lim:')
-	handles.Lim
-	disp('----------------------------')
-	disp('handles.stim:')
-	handles.stim
-	disp('----------------------------')
-	disp('handles.tdt:')
-	handles.tdt
-	disp('----------------------------')
-	disp('handles.analysis:')
-	handles.analysis
-	disp('----------------------------')
-	disp('handles.curve:')
-	handles.curve
-	disp('----------------------------')
-	disp('handles.animal:')
-	handles.animal
-%-------------------------------------------------------------------------
-	
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1549,9 +1548,10 @@ function LoadCal_Callback(hObject, eventdata, handles)
 		% try to load the calibration data
 		try
 			tmpcal = load_headphone_cal(fullfile(pathnm, filenm));
-		catch
+		catch errMsg
 			% on error, tmpcal is empty
 			tmpcal = [];
+			disp errMsg
 		end
 		
 		% if tmpcal is a structure, load of calibration file was
@@ -1771,6 +1771,49 @@ function DisplaySettings_Callback(hObject, eventdata, handles)
 		guidata(hObject, handles);	
 	end
 %-------------------------------------------------------------------------
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% DEBUG Menu
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% some miscellaneous debugging things
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%-------------------------------------------------------------------------
+function DumpHandlesDebug_Callback(hObject, eventdata, handles)
+	disp('HPSearch: Handle information')
+	disp('----------------------------')
+	disp('hObject:')
+	hObject
+	disp('----------------------------')
+	disp('eventdata:')
+	eventdata
+	disp('----------------------------')
+	disp('handles:')
+	handles
+	disp('----------------------------')
+	disp('handles.config:')
+	handles.config
+	disp('----------------------------')
+	disp('handles.Lim:')
+	handles.Lim
+	disp('----------------------------')
+	disp('handles.stim:')
+	handles.stim
+	disp('----------------------------')
+	disp('handles.tdt:')
+	handles.tdt
+	disp('----------------------------')
+	disp('handles.analysis:')
+	handles.analysis
+	disp('----------------------------')
+	disp('handles.curve:')
+	handles.curve
+	disp('----------------------------')
+	disp('handles.animal:')
+	handles.animal
+%-------------------------------------------------------------------------
+
+
 
 %% 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
