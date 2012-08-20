@@ -80,6 +80,7 @@ function HPSearch_OpeningFcn(hObject, eventdata, handles, varargin)
 	% some constants
 	%---------------------------------------------------------------
 	FORCE_INITPATHS = 0;
+	FORCE_CONFIGPATH = 0;
 
 	%---------------------------------------------------------------
 	% first off, need to process varargin
@@ -88,7 +89,12 @@ function HPSearch_OpeningFcn(hObject, eventdata, handles, varargin)
 		v = 1;
 		while v <= length(varargin)
 			if strcmpi(varargin{v}, 'InitPaths')
+				% InitPaths was given as argument -- set the force flag to 1
 				FORCE_INITPATHS = 1;
+				v = v + 1;
+			elseif strcmp(varargin{v}, 'AddConfigPath')
+				% AddConfigPath was given - set FORCE_CONFIGPATH to 1
+				FORCE_CONFIGPATH = 1;
 				v = v + 1;
 			else
 				warning('%s: Unknown option %s', mfilename, varargin{v});
@@ -97,7 +103,6 @@ function HPSearch_OpeningFcn(hObject, eventdata, handles, varargin)
 		end
 	end
 
-	
 	%----------------------------------------------------------
 	% Setup Paths
 	%----------------------------------------------------------
@@ -128,7 +133,7 @@ function HPSearch_OpeningFcn(hObject, eventdata, handles, varargin)
 	end
 
 	% load the configuration information, store in config structure
-	if isempty(which('HPSearch_Configuration'))
+	if isempty(which('HPSearch_Configuration')) || FORCE_CONFIGPATH
 		% need to add user config path
 		addpath(['C:\TytoLogy\TytoSettings\' getenv('USERNAME')]);
 	end
@@ -1780,6 +1785,10 @@ function DisplaySettings_Callback(hObject, eventdata, handles)
 
 %-------------------------------------------------------------------------
 function DumpHandlesDebug_Callback(hObject, eventdata, handles)
+	% save handles to mat file
+	hfilename = ['HPSearch_handles_' date '.mat'];
+	save(hfilename, 'handles', '-MAT');
+	% write to screen
 	disp('HPSearch: Handle information')
 	disp('----------------------------')
 	disp('hObject:')
