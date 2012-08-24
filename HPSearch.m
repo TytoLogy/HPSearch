@@ -116,7 +116,10 @@ function HPSearch_OpeningFcn(hObject, eventdata, handles, varargin)
 		% build the path to the user's TytoSettings directory and
 		% change dirs to it.  Run the tytopaths script and then
 		% return to the original ("current") directory
-		pdir = ['C:\TytoLogy\TytoSettings\' getenv('USERNAME')];
+
+		% ORIG *installed
+		%		pdir = ['C:\TytoLogy\TytoSettings\' getenv('USERNAME')];
+		pdir = ['C:\Users\sshanbhag\Code\Matlab\TytoLogy\TytoLogySettings\' getenv('USERNAME')];
 		disp([mfilename ': loading paths using ' pdir])
 		cd(pdir);
 		tytopaths
@@ -134,7 +137,11 @@ function HPSearch_OpeningFcn(hObject, eventdata, handles, varargin)
 	% load the configuration information, store in config structure
 	if isempty(which('HPSearch_Configuration')) || FORCE_CONFIGPATH
 		% need to add user config path
-		addpath(['C:\TytoLogy\TytoSettings\' getenv('USERNAME')]);
+		% orig
+% 		addpath(['C:\TytoLogy\TytoSettings\' getenv('USERNAME')]);
+		% debugging/working
+		addpath(['C:\Users\sshanbhag\Code\Matlab\TytoLogy\TytoLogySettings\' getenv('USERNAME')]);
+		
 	end
 	
 	%----------------------------------------------------------
