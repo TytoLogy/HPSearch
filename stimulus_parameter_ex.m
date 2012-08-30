@@ -38,7 +38,7 @@ StimList{3} = cstim;
 
 %% then save the StimList in a .mat file.
 % windows
-% save('c:\home\users\potato\stimlists\mystims.mat', 'StimList', '-MAT')
+save('c:\home\users\potato\stimlists\mystims.mat', 'StimList', '-MAT')
 %  mac
 save('./mystims.mat', 'StimList', '-MAT')
 
