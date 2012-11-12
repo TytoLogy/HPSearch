@@ -138,9 +138,9 @@ function HPSearch_OpeningFcn(hObject, eventdata, handles, varargin)
 	if isempty(which('HPSearch_Configuration')) || FORCE_CONFIGPATH
 		% need to add user config path
 		% orig
-% 		addpath(['C:\TytoLogy\TytoSettings\' getenv('USERNAME')]);
+ 		addpath(['C:\TytoLogy\TytoLogySettings\' getenv('USERNAME')]);
 		% debugging/working
-		addpath(['C:\Users\sshanbhag\Code\Matlab\TytoLogy\TytoLogySettings\' getenv('USERNAME')]);
+% 		addpath(['C:\Users\sshanbhag\Code\Matlab\TytoLogy\TytoLogySettings\' getenv('USERNAME')]);
 		
 	end
 	
