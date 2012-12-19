@@ -106,28 +106,21 @@ function HPSearch_OpeningFcn(hObject, eventdata, handles, varargin)
 	% Setup Paths
 	%----------------------------------------------------------
 	disp([mfilename ': checking paths'])
+	% directory when using installed version:
+	pdir = ['C:\TytoLogy\TytoLogySettings\' getenv('USERNAME')];
+	% development tree
+	% 	pdir = ['C:\Users\sshanbhag\Code\Matlab\TytoLogy\TytoLogySettings\' getenv('USERNAME')];
+	
 	if isempty(which('RPload')) || FORCE_INITPATHS
 		% could not find the RPload.m function (which is in TytoLogy
 		% toolbox) which suggests that the paths are not set or are 
 		% incorrect for this setup.  load the paths using the tytopaths program.
-		
-		% First, store the current path
-		cdir = pwd;
-		% build the path to the user's TytoSettings directory and
-		% change dirs to it.  Run the tytopaths script and then
-		% return to the original ("current") directory
-
-		% ORIG *installed
-		%		pdir = ['C:\TytoLogy\TytoSettings\' getenv('USERNAME')];
-		pdir = ['C:\Users\sshanbhag\Code\Matlab\TytoLogy\TytoLogySettings\' getenv('USERNAME')];
-		disp([mfilename ': loading paths using ' pdir])
-		cd(pdir);
-		tytopaths
-		cd(cdir);
+		disp([mfilename ': loading paths using ' pdir '\tytopaths.m']);
+		run(fullfile(pdir, 'tytopaths'));
 		% now recheck
 		if isempty(which('RPload'))
 			error('%s: tried setting paths via %s, but failed.  sorry.', ...
-						mfilename, [pdir '\tytopaths.m']);
+						mfilename, fullfile(pdir, 'tytopaths.m'));
 		end
 	else
 		% seems okay, so continue
