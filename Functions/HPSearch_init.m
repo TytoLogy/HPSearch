@@ -469,7 +469,30 @@ switch stype
 		out.TTLPulseDur = 1;
 		return;
 		
-		
+	% TDT:RZ-MJR sets up recording from 1 channel of medusa on RZ5
+	% and output from 2 channels on RZ6
+	case {'TDT:RZ-MJR-SINGLE'}
+		out.StimInterval = 100;
+		out.StimDuration = gDuration;
+		out.AcqDuration = 300;
+		out.SweepPeriod = out.AcqDuration + 10;
+		out.StimDelay = gDelay;
+		out.HeadstageGain = 1000;			% gain for headstage
+		out.ScopeChan = 1;					% d/a output channel for monitor
+		out.MonitorChannel = 1;				% monitor channel on Rz5 (from medusa)
+		out.MonitorGain = 1000;				% monitor channel gain
+		out.decifactor = 1;					% factor to reduce input data sample rate
+		out.HPEnable = 1;						% enable HP filter
+		out.HPFreq = 200;						% HP frequency
+		out.LPEnable = 1;						% enable LP filter
+		out.LPFreq = 10000;					% LP frequency
+		out.nChannels = 1;
+		out.InputChannel = zeros(out.nChannels, 1);
+		out.OutputChannel = [1 2];
+		%TTL pulse duration (msec)
+		out.TTLPulseDur = 1;
+		return;
+
 		
 	% TDT:OWLSCILLATE is used during vestibular stimulation of the owl
 	case{'TDT:OWLSCILLATE'}

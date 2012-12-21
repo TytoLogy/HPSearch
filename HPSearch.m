@@ -13,7 +13,7 @@ function varargout = HPSearch(varargin)
 %      existing singleton*.  
 %
 
-% Last Modified by GUIDE v2.5 20-Aug-2012 18:13:18
+% Last Modified by GUIDE v2.5 21-Dec-2012 18:22:34
 
 % Begin initialization code - DO NOT EDIT
 	gui_Singleton = 1;
@@ -277,8 +277,8 @@ function TDTEnableButton_Callback(hObject, eventdata, handles)
 			%---------------------------------------------------------
 			% TDT hardware startup failed
 			%---------------------------------------------------------
-			warning([mfilename ':HPSearch_TDTopen returned empty value for handles...'])
-			warning([mfilename 'Aborting...'])
+			warning([mfilename ':HPSearch_TDTopen returned empty value for handles...']);
+			warning([mfilename 'Aborting...']);
 			update_ui_str(handles.TDTEnableButton, 'TDT Enable');
 			set(handles.TDTEnableButton, 'ForegroundColor', ENABLECOLOR);
 		end
@@ -636,7 +636,7 @@ function CurveButton_Callback(hObject, eventdata, handles)
 		%-------------------------------------------------------
 		% if we have data, then save curve info
 		%-------------------------------------------------------
-		if ~isempty(curvedata) & (curvedata.cancelFlag == 0);
+		if ~isempty(curvedata) && (curvedata.cancelFlag == 0);
 			% first, build the curvesettings structure from the various
 			% settings structs used in HPSearch
 			curvesettings.curve = curve;
@@ -1821,6 +1821,11 @@ function DumpHandlesDebug_Callback(hObject, eventdata, handles)
 	handles.animal
 %-------------------------------------------------------------------------
 
+%-------------------------------------------------------------------------
+function KeyboardDebug_Callback(hObject, eventdata, handles)
+	disp('DEBUGGING!')
+	keyboard
+%-------------------------------------------------------------------------
 
 
 %% 
@@ -1985,6 +1990,8 @@ function csAMFREQrange_CreateFcn(hObject, eventdata, handles)
 		 set(hObject,'BackgroundColor','white');
 	end
 %-------------------------------------------------------------------------
+
+
 
 
 

@@ -137,7 +137,7 @@ else
 	stim_start = ms2samples(tdt.StimDelay, indev.Fs);
 	stim_end = stim_start + ms2samples(tdt.StimDuration, indev.Fs);
 	% time vector for plots
-	dt = 1/indev.Fs;
+	dt = 1/indev.Fs
 	tvec = 1000*dt*(0:(acqpts-1));
 	% set up the plot figure
 	axes(handles.RespPlot);
@@ -265,7 +265,6 @@ else
 		th = read_ui_val(handles.SpikeThreshold);
 		handles.thresholdLine = line(xlim, [th th], 'Color', 'm');
 		handles.analysis.spikeThreshold = th;
-
 		if tdt.nChannels > 1
 			spiketimes = spikeschmitt2(resp(:, SPIKECHAN), handles.analysis.spikeThreshold, analysis.spikeWindow, indev.Fs);
 		else

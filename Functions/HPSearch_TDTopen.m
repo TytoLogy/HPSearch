@@ -268,7 +268,7 @@ if ~TDTINIT || TDTINIT_FORCE
 			% save TDTINIT in lock file
 			save(handles.config.TDTLOCKFILE, 'TDTINIT');
 	
-		%% old RosenLab setup
+		%% new RosenLab setup
 		case	'RZ6_RZ5'
 			try
 				%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -288,7 +288,7 @@ if ~TDTINIT || TDTINIT_FORCE
 				handles.indev.handle = tmpdev.handle;
 				handles.indev.status = tmpdev.status;
 				%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-				% Initialize RX6_1
+				% Initialize RZ6_1
 				%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 				disp('...starting RZ6 for headphone output...')
 				tmpdev = RZ6init('GB', handles.outdev.Dnum);
@@ -322,6 +322,7 @@ if ~TDTINIT || TDTINIT_FORCE
 				handles.outdev.TagName = tmptags;				
 				tmptags = RPtagnames(handles.indev);
 				handles.indev.TagName = tmptags;
+keyboard
 				%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 				% set the lock
 				%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%				
