@@ -83,7 +83,7 @@ function out = HPSearch_init(stype)
 %----------------------------------------------------------------------
 % Get Path Information set in HPSearch_configuration()
 %----------------------------------------------------------------------
-% 	gPath = 'H:\Code\TytoLogy\toolbox';
+% 	gPath = 'H:\Code\TytoLogy\Toolbox';
 % HPSearch_configuration returns a struct of configuration parameters
 % so assign the output of HPSearch_Configuration to a temporary variable
 % and save the global root path for TytoLogy project
@@ -498,7 +498,7 @@ switch stype
 
 	%----------------------------------------------------------------------
 	%--------------------------------------- INDEV CONFIGURATION ----------
-	% Configuration of input device TDT struct (see TDT toolbox for methods
+	% Configuration of input device TDT struct (see TDT Toolbox for methods
 	% to open, run, configure, interface with TDT hardware)
 	%
 	% In all cases, a "dummy" sampling rate, Fs, is specified, mostly for 
@@ -520,7 +520,7 @@ switch stype
 	case {'INDEV:IODEV'}
 		out.Fs = 50000;
 		% set this to wherever the circuits are stored
-		out.Circuit_Path = [gPath '\toolbox\TDT\Circuits\RX8_2\50KHz'];
+		out.Circuit_Path = [gPath '\Toolbox\TDTToolbox\Circuits\RX8_2\50KHz'];
 		out.Circuit_Name = 'RX8_2_BinauralStim_SglResponseFiltered';
 		% Dnum = device number - this is for RX8 (2)
 		out.Dnum=2;
@@ -534,7 +534,7 @@ switch stype
 	case {'INDEV:MEDUSA'}
 		out.Fs = 25000;
 		% set this to wherever the circuits are stored
-		out.Circuit_Path = [gPath '\toolbox\TDT\Circuits\RX5'];
+		out.Circuit_Path = [gPath '\Toolbox\TDTToolbox\Circuits\RX5'];
 		% for recording from 4 channels
 		out.Circuit_Name = 'RX5_1ChannelAcquire_zBus';
 		% Dnum = device number - this is for RX5
@@ -547,7 +547,7 @@ switch stype
 	case {'INDEV:MEDUSA4'}
 		out.Fs = 25000;
 		% set this to wherever the circuits are stored
-		out.Circuit_Path = [gPath '\toolbox\TDT\Circuits\RX5'];
+		out.Circuit_Path = [gPath '\Toolbox\TDTToolbox\Circuits\RX5'];
 		% for recording from 4 channels
 		out.Circuit_Name = 'RX5_4ChannelAcquire_zBus';
 		% Dnum = device number - this is for RX5
@@ -560,7 +560,7 @@ switch stype
 	case {'INDEV:MEDUSA16'}
 		out.Fs = 25000;
 		% set this to wherever the circuits are stored
-		out.Circuit_Path = [gPath '\toolbox\TDT\Circuits\RX5'];
+		out.Circuit_Path = [gPath '\Toolbox\TDTToolbox\Circuits\RX5'];
 		% for recording from 16 Channels
 		out.Circuit_Name = 'RX5_16ChannelAcquire_zBus';
 		% Dnum = device number - this is for RX5
@@ -574,7 +574,7 @@ switch stype
 	case {'INDEV:RX5_OWLSCILLATE'}
 		out.Fs = 25000;
 		% set this to wherever the circuits are stored
-		out.Circuit_Path = [gPath '\toolbox\TDT\Circuits\RX5'];
+		out.Circuit_Path = [gPath '\Toolbox\TDTToolbox\Circuits\RX5'];
 		out.Circuit_Name = 'RX5_OwlscillatorAcquire_TTLtrig';
 		% Dnum = device number - this is for RX8 (2)
 		out.Dnum=1;
@@ -587,7 +587,7 @@ switch stype
 	case {'INDEV:RZ5_MEDUSA1'}
 		out.Fs = 25000;
 		% set this to wherever the circuits are stored
-		out.Circuit_Path = [gPath '\toolbox\TDT\Circuits\RZ5'];
+		out.Circuit_Path = [gPath '\Toolbox\TDTToolbox\Circuits\RZ5'];
 		% for recording from 16 Channels
 		out.Circuit_Name = 'RZ5_1ChannelAcquire_zBus';
 		% Dnum = device number - this is for RZ5
@@ -601,8 +601,7 @@ switch stype
 	case {'INDEV:RZ5_MEDUSA16'}
 		out.Fs = 25000;
 		% set this to wherever the circuits are stored
-		%out.Circuit_Path = [gPath '\toolbox\TDT\Circuits\RZ5'];
-		out.Circuit_Path = 'X:\Code\Matlab\dev\TytoLogy\Toolbox\TDTToolbox\Circuits\RZ5';
+		out.Circuit_Path = [gPath '\Toolbox\TDTToolbox\Circuits\RZ5'];
 		% for recording from 16 Channels
 		out.Circuit_Name = 'RZ5_16ChannelAcquire_zBus';
 		% Dnum = device number - this is for RZ5
@@ -618,7 +617,7 @@ switch stype
 	case {'OUTDEV:HEADPHONES'}
 		out.Fs = 50000;
 		% set this to wherever the circuits are stored
-		out.Circuit_Path = [gPath '\toolbox\TDT\Circuits\RX8_2\50KHz\'];
+		out.Circuit_Path = [gPath '\Toolbox\TDTToolbox\Circuits\RX8_2\50KHz\'];
 		out.Circuit_Name = 'RX8_2_BinauralOutput_zBus';
 		% Dnum = device number - this is for RX8 (2)
 		out.Dnum=2;
@@ -629,7 +628,7 @@ switch stype
 	case {'OUTDEV:HEADPHONES+MASKER'}
 		out.Fs = 50000;
 		% set this to wherever the circuits are stored
-		out.Circuit_Path = [gPath '\toolbox\TDT\Circuits\RX8_2\50KHz\'];
+		out.Circuit_Path = [gPath '\Toolbox\TDTToolbox\Circuits\RX8_2\50KHz\'];
 		out.Circuit_Name = 'RX8_2_BinauralOutputMask_zBus';
 		% Dnum = device number - this is for RX8 (2)
 		out.Dnum=2;
@@ -640,7 +639,7 @@ switch stype
 	case {'OUTDEV:RX8_2_OWLSCILLATE'}
 		out.Fs = 50000;
 		% set this to wherever the circuits are stored
-		out.Circuit_Path = [gPath '\toolbox\TDT\Circuits\RX8_2\50KHz'];
+		out.Circuit_Path = [gPath '\Toolbox\TDTToolbox\Circuits\RX8_2\50KHz'];
 		out.Circuit_Name = 'RX8_2_Owlscillator_VelTrigPosAcq';
 		% Dnum = device number - this is for RX8 (2)
 		out.Dnum=2;
@@ -651,7 +650,7 @@ switch stype
 	case {'OUTDEV:HEADPHONES_RX6'}
 		out.Fs = 50000;
 		% set this to wherever the circuits are stored
-		out.Circuit_Path = [gPath '\toolbox\TDT\Circuits\RX6\50KHz\'];
+		out.Circuit_Path = [gPath '\Toolbox\TDTToolbox\Circuits\RX6\50KHz\'];
 		out.Circuit_Name = 'RX6_BinauralOutput_zBus';
 		% Dnum = device number - this is for RX6, device 1
 		out.Dnum=1;
@@ -662,8 +661,7 @@ switch stype
 	case {'OUTDEV:LOUDSPEAKER_RZ6'}
 		out.Fs = 50000;
 		% set this to wherever the circuits are stored
-		%out.Circuit_Path = [gPath '\toolbox\TDT\Circuits\RZ6\100KHz\'];
-		out.Circuit_Path = 'X:\Code\Matlab\dev\TytoLogy\Toolbox\TDTToolbox\Circuits\RZ6\100KHz';
+		out.Circuit_Path = [gPath '\Toolbox\TDTToolbox\Circuits\RZ6\'];
 		out.Circuit_Name = 'RZ6_SpeakerOutput_zBus';
 		% Dnum = device number - this is for RX6, device 1
 		out.Dnum=1;
