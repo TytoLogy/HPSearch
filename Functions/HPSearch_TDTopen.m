@@ -287,10 +287,11 @@ if ~TDTINIT || TDTINIT_FORCE
 				handles.indev.C = tmpdev.C;
 				handles.indev.handle = tmpdev.handle;
 				handles.indev.status = tmpdev.status;
+
 				%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 				% Initialize RZ6_1
 				%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-				disp('...starting RZ6 for headphone output...')
+				disp('...starting RZ6 for loudspeaker output...')
 				tmpdev = RZ6init('GB', handles.outdev.Dnum);
 				handles.outdev.C = tmpdev.C;
 				handles.outdev.handle = tmpdev.handle;
@@ -312,6 +313,15 @@ if ~TDTINIT || TDTINIT_FORCE
 				inStatus = RPrun(handles.indev);
 				outStatus = RPrun(handles.outdev);
 				%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+				% Send zBus A and B triggers to initialize and check enable
+				% status
+				%	- might fix issue with fucked up sample rate
+				%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+				zBUStrigA_PULSE(handles.zBUS);
+				zBUStrigB_PULSE(handles.zBUS);
+				tmp = RPgettagval(handles.indev, 'Enable');
+				tmp = RPgettagval(handles.outdev, 'Enable');
+				%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 				% Get circuit information
 				%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 				% get the input and output sampling rates
@@ -322,7 +332,7 @@ if ~TDTINIT || TDTINIT_FORCE
 				handles.outdev.TagName = tmptags;				
 				tmptags = RPtagnames(handles.indev);
 				handles.indev.TagName = tmptags;
-keyboard
+
 				%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 				% set the lock
 				%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%				
