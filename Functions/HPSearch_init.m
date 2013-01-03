@@ -125,7 +125,7 @@ switch stype
 	
 	%----------------------------------------------------------------------
 	% LIMITS are used for keeping different user-definable variables within
-	% bounds
+	% bounds, and are used  to set limits on the GUI controls
 	%----------------------------------------------------------------------
 	case {'LIMITS', 'DEFAULT'}		
 		% stimulus limits
@@ -138,7 +138,7 @@ switch stype
 		out.F = [1 24000];
 		out.BW = [1 12500];
 		% sinusoid AM noise controls, added 19 Nov 09, SJS
-		out.sAMFreq = [0 1000];
+		out.sAMFreq = [0 200];
 		out.sAMPercent = [0 100];
 		
 		% Stimulus & I/O limits

@@ -1408,21 +1408,21 @@ function MaskEnable_Callback(hObject, eventdata, handles)
 %%%%%%%%%%%%%%%%%%%%% sAM Controls %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % sAM percent modulation (depth) ---------------------------------------
 function sAMPercent_Callback(hObject, eventdata, handles)
-	handles.stim.sAMPercent = slider_update(handles.sAMPercent, handles.sAMPercenttext, '%d');
+	handles.stim.sAMPercent = slider_update(handles.sAMPercent, handles.sAMPercenttext, '%.1f');
 	guidata(hObject, handles);
 function sAMPercenttext_Callback(hObject, eventdata, handles)
 	handles.stim.sAMPercent = text_update(handles.sAMPercenttext, ...
-												handles.sAMPercent, handles.Lim.sAMPercent, '%d');
+												handles.sAMPercent, handles.Lim.sAMPercent, '%.1f');
 	guidata(hObject, handles);
 %--------------------------------------------------------------------------
 
 % sAM Freq ----------------------------------------------------------------
 function sAMFreq_Callback(hObject, eventdata, handles)
-	handles.stim.sAMFreq = slider_update(handles.sAMFreq, handles.sAMFreqtext, '%d');
+	handles.stim.sAMFreq = slider_update(handles.sAMFreq, handles.sAMFreqtext, '%.1f');
 	guidata(hObject, handles);
 function sAMFreqtext_Callback(hObject, eventdata, handles)
 	handles.stim.sAMFreq = text_update(handles.sAMFreqtext, handles.sAMFreq, ...
-										handles.Lim.sAMFreq, '%d');
+										handles.Lim.sAMFreq, '%.1f');
 	guidata(hObject, handles);
 %--------------------------------------------------------------------------
 
