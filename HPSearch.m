@@ -171,7 +171,7 @@ function HPSearch_OpeningFcn(hObject, eventdata, handles, varargin)
 	% update the UI from the stimulus
 	%-------------------------------------
 	updateUIfromStim(handles, handles.stim);	
-	handles.StimInterval = 1;
+% 	handles.StimInterval = 1;
 	
 	%-------------------------------------
 	% Update handles structure

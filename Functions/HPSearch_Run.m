@@ -32,6 +32,8 @@
 % 			data is being recorded from medusa (and hence iofunction() 
 % 			returns a vector and not a matrix)
 %	5 Jun 2012 (SJS): updated email address
+%	2 Jan 2013 (SJS): updated handling of ABI and monaural searching stim,
+%							fixed stim interval issue
 %------------------------------------------------------------------------
 % To Do:
 %	- display channel - only shows channel 1 at the moment!
@@ -100,7 +102,7 @@ else
 	% make some local copies of config structs to simplify
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	% stimulus settings
-	stim = handles.stim
+	stim = handles.stim;
 	% TDT things
 	tdt = handles.tdt;
 	indev = handles.indev;
@@ -137,15 +139,20 @@ else
 	stim_start = ms2samples(tdt.StimDelay, indev.Fs);
 	stim_end = stim_start + ms2samples(tdt.StimDuration, indev.Fs);
 	% time vector for plots
-	dt = 1/indev.Fs
+	dt = 1/indev.Fs;
 	tvec = 1000*dt*(0:(acqpts-1));
 	% set up the plot figure
+	%{
 	axes(handles.RespPlot);
 	Raxes = gca;
 	% clear axes and set RespPlot options
 	cla(Raxes);
 	set(Raxes, 'YLimMode', 'manual');
 	set(Raxes, 'NextPlot', 'replacechildren');
+	%}
+	cla(handles.RespPlot);
+	set(handles.RespPlot, 'YLimMode', 'manual');
+	set(handles.RespPlot, 'NextPlot', 'replacechildren');
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	%play sound
@@ -201,29 +208,50 @@ else
 		end
 		% apply the sin^2 amplitude envelope to the stimulus
 		S = sin2array(S, stim.Ramp, outdev.Fs);
-
-		% compute new spl values from the desired ILD and ABI
-		spl_val = computeLRspl(stim.ILD, stim.ABI);
-
+		
+		% build LR enable array
+		LRenable = [stim.LSpeakerEnable stim.RSpeakerEnable]';
+			
 		% check if we need to reset the attenuators 
 		% (Freq, BW, ILD or ABI has changed)
  		if newstimFlag
-			% compute attenuator settings
-			if ~strcmp(stim.type, 'SAM')
-				[atten, spl_val] = figure_headphone_atten(spl_val, rms_val, caldata, ...
-												[stim.LSpeakerEnable stim.RSpeakerEnable]);
+			% if binaural stimulus is used, determine attenuation using
+			% ILD and ABI settings
+			if all(LRenable)
+				% compute new spl values from the desired ILD and ABI
+				spl_val = computeLRspl(stim.ILD, stim.ABI);
+				% compute attenuator settings
+				if ~strcmp(stim.type, 'SAM')
+					[atten, spl_val] = figure_headphone_atten(spl_val, rms_val, ...
+																			caldata, LRenable);
+				else
+					[atten, spl_val] = figure_headphone_atten(spl_val, rms_mod, ...
+																			caldata, LRenable);
+				end
+				% update stim struct from computed atten values
+				stim.Latten = atten(L);
+				stim.Ratten = atten(R);
+				% update the controls for attenuators
+				control_update(handles.LAttentext, handles.Latten, atten(L));
+				control_update(handles.RAttentext, handles.Ratten, atten(R));
+			% If monaural, use ABI as monaural stim level
 			else
-				[atten, spl_val] = figure_headphone_atten(spl_val, rms_mod, caldata, ...
-												[stim.LSpeakerEnable stim.RSpeakerEnable]);
+				spl_val = (stim.ABI * [1 1])';
+				% compute attenuator settings
+				if ~strcmp(stim.type, 'SAM')
+					[atten, spl_val] = figure_headphone_atten(spl_val, rms_val, ...
+																			caldata, LRenable);
+				else
+					[atten, spl_val] = figure_headphone_atten(spl_val, rms_mod, ...
+																			caldata, LRenable);
+				end
+				% update stim struct from computed atten values
+				stim.Latten = atten(L);
+				stim.Ratten = atten(R);
+				% update the controls for attenuators
+				control_update(handles.LAttentext, handles.Latten, atten(L));
+				control_update(handles.RAttentext, handles.Ratten, atten(R));
 			end
-			
-			% update stim struct from computed atten values
-			stim.Latten = atten(L);
-			stim.Ratten = atten(R);
-			
-			% update the controls for attenuators
-			control_update(handles.LAttentext, handles.Latten, atten(L));
-			control_update(handles.RAttentext, handles.Ratten, atten(R));
 			% set the attenuators
 			PA5setatten(PA5{L}, atten(L));
 			PA5setatten(PA5{R}, atten(R));
@@ -252,14 +280,14 @@ else
 		% use the selected channel (single electrode)
 		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 		% select the respplot axes
-		axes(handles.RespPlot);		
+		axes(handles.RespPlot);
 		% build time vector and plot
 		t = (1000 * (0:length(presp)-1) ./ (indev.Fs ./ tdt.decifactor))';
-		plot(t, presp);
+		plot(handles.RespPlot, t, presp);
 		% set Y axis scaling from UI control 
 		% (convert to number using 'n' option)
 		handles.analysis.respscale = read_ui_str(handles.RespScaleText, 'n');
-		ylim(handles.analysis.respscale.*[-1 1]);
+		ylim(handles.RespPlot, handles.analysis.respscale.*[-1 1]);
 
 		% plot a raster of detected spikes on the top of the plot
 		th = read_ui_val(handles.SpikeThreshold);
@@ -312,9 +340,9 @@ else
 		end
 		% decrement RasterIndex to move next plot down a row
 		RasterIndex = RasterIndex - 1;
-
+		
 		% pause for ISI
-		pause(0.001*handles.StimInterval);
+		pause(0.001*handles.tdt.StimInterval);
 		
 		% increment counter
 		stimulusCount = stimulusCount + 1;
