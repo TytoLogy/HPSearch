@@ -1671,12 +1671,16 @@ function LoadScript_Callback(hObject, eventdata, handles)
 		cd(current_dir);
 	end
 	
-	if script ~= 0
+	if scriptfile ~= 0
 		scriptfilepath = fullfile(scriptpath, scriptfile);
 		tmp = load(scriptfilepath, '-MAT');
 		handles.script = tmp.script;
 		handles.ScriptLoaded = 1;
 		guidata(hObject, handles)
+	else
+		fprintf('Aborting script load... \n');
+		handles.ScriptLoaded = 0;
+		guidata(hObject, handles);
 	end
 %--------------------------------------------------------------------
 

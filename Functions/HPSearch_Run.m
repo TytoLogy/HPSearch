@@ -64,6 +64,8 @@ if state && ~TDTInitStatus(handles)
 elseif state == 0 && TDTInitStatus(handles)
 	% Terminate the Run
 	disp('Run ending...');
+	RPsettag(handles.indev, 'MonitorEnable', 0);
+
 	% Button was pressed to stop Run
 	update_ui_str(hObject, 'Run')
 	set(hObject, 'ForegroundColor', [0.0 0.5 0.0]);
