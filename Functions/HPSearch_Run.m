@@ -299,8 +299,7 @@ else
 			spiketimes = spikeschmitt2(resp(:, SPIKECHAN), handles.analysis.spikeThreshold, analysis.spikeWindow, indev.Fs);
 		else
 			spiketimes = spikeschmitt2(resp', handles.analysis.spikeThreshold, analysis.spikeWindow, indev.Fs);
-		end
-
+        end
 		spiketimes = 1000 * spiketimes / indev.Fs;
 		hold on
 			yl = ylim;

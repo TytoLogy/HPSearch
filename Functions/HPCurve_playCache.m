@@ -79,17 +79,17 @@ function [curvedata, rawdata] = HPCurve_playCache(stimcache, datafile, curve, st
 % feedback to user about curve
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	disp(['Running ' curvetype ' Curve using ' stimtype '...'])
-	disp(sprintf('\t Nreps: %d', curve.nreps));
-	disp(sprintf('\t ITD range: %s', curve.ITDrangestr));
-	disp(sprintf('\t ILD range: %s', curve.ILDrangestr));
-	disp(sprintf('\t ABI range: %s', curve.ABIrangestr));
-	disp(sprintf('\t FREQ range: %s', curve.FREQrangestr));
-	disp(sprintf('\t BC range: %s', curve.BCrangestr));
-	disp(sprintf('\t sAM Pct range: %s', curve.sAMPCTrangestr));
-	disp(sprintf('\t sAM Freq range: %s', curve.sAMFREQrangestr));
-	disp(sprintf('\t saveStim: %d', curve.saveStim));
-	disp(sprintf('\t freezeStim: %d', curve.freezeStim));
-	disp(sprintf('\t display channel: %d', SPIKECHAN));
+	fprintf('\t Nreps: %d', curve.nreps);
+	fprintf('\t ITD range: %s', curve.ITDrangestr);
+	fprintf('\t ILD range: %s', curve.ILDrangestr);
+	fprintf('\t ABI range: %s', curve.ABIrangestr);
+	fprintf('\t FREQ range: %s', curve.FREQrangestr);
+	fprintf('\t BC range: %s', curve.BCrangestr);
+	fprintf('\t sAM Pct range: %s', curve.sAMPCTrangestr);
+	fprintf('\t sAM Freq range: %s', curve.sAMFREQrangestr);
+	fprintf('\t saveStim: %d', curve.saveStim);
+	fprintf('\t freezeStim: %d', curve.freezeStim);
+	fprintf('\t display channel: %d', SPIKECHAN);
 	
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % set the start and end bins for the data acquisition
@@ -225,7 +225,7 @@ function [curvedata, rawdata] = HPCurve_playCache(stimcache, datafile, curve, st
 			resp{stimcache.trialRandomSequence(rep, trial), rep} =  mcDeMux(datatrace, tdt.nChannels);
 			current_trace = resp{stimcache.trialRandomSequence(rep, trial), rep}(:, SPIKECHAN);
 		else
-			resp{stimcache.trialRandomSequence(rep, trial), rep} =  datatrace';
+			resp{stimcache.trialRandomSequence(rep, trial), rep} =  datatrace;
 			current_trace = resp{stimcache.trialRandomSequence(rep, trial), rep};
 		end
 
@@ -234,14 +234,13 @@ function [curvedata, rawdata] = HPCurve_playCache(stimcache, datafile, curve, st
 		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%			
 		% plot trace
 		axes(RespPlot);
-		
 		plot(tvec, current_trace)
 		ylim(analysis.respscale.*[-1 1]);
 		xlim([0 round(max(tvec))]);
 		line(xlim, analysis.spikeThreshold * [1 1], 'Color', 'r');
 
 		% detect and plot spikes using software Schmitt trigger detector
-		spiketimes = spikeschmitt2(current_trace, analysis.spikeThreshold, analysis.spikeWindow, indev.Fs);
+ 		spiketimes = spikeschmitt2(current_trace, analysis.spikeThreshold, analysis.spikeWindow, indev.Fs);
 		spiketimes = 1000 * spiketimes / indev.Fs;
 		hold on
 			yl = ylim;
