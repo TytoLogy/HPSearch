@@ -686,7 +686,7 @@ switch stype
 		% set this to wherever the circuits are stored
 		out.Circuit_Path = [gPath '\Toolbox\TDTToolbox\Circuits\RZ6\'];
 		out.Circuit_Name = 'RZ6_SpeakerOutput_zBus';
-		% Dnum = device number - this is for RX6, device 1
+		% Dnum = device number - this is for RZ6, device 1
 		out.Dnum=1;
 		out.C = [];
 		out.status = 0;

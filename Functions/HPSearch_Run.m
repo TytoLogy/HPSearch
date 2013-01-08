@@ -201,7 +201,6 @@ else
 											stim.F, stim.ITD, stim.RadVary, caldata);
 				
 			case 'SAM'
-				% build noisef vector
 				NoiseF = [stim.Flo stim.Fhi];
 				[S, rms_val, rms_mod, modPhi]  = syn_headphone_amnoise(stim.Duration, outdev.Fs, NoiseF, ...
 																stim.ITD, stim.BC, ...
