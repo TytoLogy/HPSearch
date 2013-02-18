@@ -57,6 +57,8 @@ function [curvedata, rawdata] = HPCurve_playCache(stimcache, datafile, curve, st
 % TO DO:
 %	- make fully useful with 16 channels of spike data
 %--------------------------------------------------------------------------
+% for printing to screen for debugging
+%fprintf('********************************* in %s\n\n', mfilename);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Setup Plots using the _configurePlots script
@@ -184,17 +186,17 @@ function [curvedata, rawdata] = HPCurve_playCache(stimcache, datafile, curve, st
 		% stimulus 
 		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 		Sn = stimcache.Sn{sindex};
-
+        
 		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 		% set the attenuators
 		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 		PA5setatten(PA5{L}, atten(L));
 		PA5setatten(PA5{R}, atten(R));
-
+        
 		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 		% play the sound and return the response
 		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-		[datatrace, rate] = iofunction(Sn, acqpts, indev, outdev, zBUS);
+        [datatrace, rate] = iofunction(Sn, acqpts, indev, outdev, zBUS);
 
 		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 		% Save Data
@@ -222,19 +224,19 @@ function [curvedata, rawdata] = HPCurve_playCache(stimcache, datafile, curve, st
 		if tdt.nChannels > 1
 			% demultiplex the returned vector and store the response
 			% mcDeMux returns an array that is [nChannels, nPoints]
-			resp{stimcache.trialRandomSequence(rep, trial), rep} =  mcDeMux(datatrace, tdt.nChannels);
+            resp{stimcache.trialRandomSequence(rep, trial), rep} =  mcDeMux(datatrace, tdt.nChannels);
 			current_trace = resp{stimcache.trialRandomSequence(rep, trial), rep}(:, SPIKECHAN);
 		else
 			resp{stimcache.trialRandomSequence(rep, trial), rep} =  datatrace;
 			current_trace = resp{stimcache.trialRandomSequence(rep, trial), rep};
-		end
-
+        end
+        
 		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 		% RespPlot: plot trace
 		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%			
 		% plot trace
-		axes(RespPlot);
-		plot(tvec, current_trace)
+        axes(RespPlot);
+        plot(tvec, current_trace)
 		ylim(analysis.respscale.*[-1 1]);
 		xlim([0 round(max(tvec))]);
 		line(xlim, analysis.spikeThreshold * [1 1], 'Color', 'r');
@@ -300,8 +302,9 @@ function [curvedata, rawdata] = HPCurve_playCache(stimcache, datafile, curve, st
 		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 		% pause for the stimulus interval (stim.Delay)
 		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-		pause(0.001*stim.Delay);
-
+% 		pause(0.001*stim.Delay);
+        pause(0.001 * tdt.StimInterval);
+        
 		sindex = sindex + 1;
 	end %%% End of REPS LOOP
 
@@ -347,7 +350,8 @@ function [curvedata, rawdata] = HPCurve_playCache(stimcache, datafile, curve, st
 				% loop through the completed trials (values for the curve)
 				for r=1:size(resp, 1)			
 					% threshold the data within the spike analysis window
-					spikes = spikeschmitt2(resp{r, q}(spike_start:spike_end), ...
+                    
+                    spikes = spikeschmitt2(resp{r, q}(spike_start:spike_end), ...
 													analysis.spikeThreshold, ...
 													analysis.spikeWindow, indev.Fs);
 					% convert to milliseconds, accounting for offset due to the

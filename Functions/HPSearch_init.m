@@ -94,8 +94,8 @@ gPath = tmpConfig.TYTOLOGY_ROOT_PATH;
 % global settings for stimulus delay and duration
 %----------------------------------------------------------------------
 gDelay = 50;
-gDuration = 100;
-gSpikeWindow = 50;
+gDuration = 200;
+gSpikeWindow = 200;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -135,8 +135,8 @@ switch stype
 		out.Ratten = out.Latten;
 		out.ABI = [0 100];
 		out.BC = [0 100];
-		out.F = [1 24000];
-		out.BW = [1 12500];
+		out.F = [1 35000];  % was [1 24000]
+		out.BW = [1 17500]; % was [1 12500]
 		% sinusoid AM noise controls, added 19 Nov 09, SJS
 		out.sAMFreq = [0 200];
 		out.sAMPercent = [0 100];
@@ -191,13 +191,13 @@ switch stype
 		out.BC = 100;
 		out.F = 5000;
 		out.BW = 9000;
-		out.RadVary = 1;
+		out.RadVary = 0;
 		out.Duration = gDuration;
 		out.Ramp = 5;
 		out.Delay = gDelay;
 		out.Flo = floor(out.F - out.BW/2);
 		out.Fhi = ceil(out.F + out.BW/2);
-		out.freezeStim = 0;
+		out.freezeStim = 1;
 		% sinusoid AM noise controls, added 19 Nov 09, SJS
 		out.sAMFreq = 0;
 		out.sAMPercent = 0;
@@ -482,10 +482,10 @@ switch stype
 		out.MonitorChannel = 1;				% monitor channel on Rz5 (from medusa)
 		out.MonitorGain = 1000;				% monitor channel gain
 		out.decifactor = 1;					% factor to reduce input data sample rate
-		out.HPEnable = 1;						% enable HP filter
-		out.HPFreq = 200;						% HP frequency
-		out.LPEnable = 1;						% enable LP filter
-		out.LPFreq = 10000;					% LP frequency
+		out.HPEnable = 1;                   % enable HP filter
+		out.HPFreq = 100;					% HP frequency (this was 200)
+		out.LPEnable = 1;					% enable LP filter
+		out.LPFreq = 25000;					% LP frequency (this was 10000)
 		out.nChannels = 1;
 		out.InputChannel = zeros(out.nChannels, 1);
 		out.OutputChannel = [1 2];

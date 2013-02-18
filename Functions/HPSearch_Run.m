@@ -209,10 +209,10 @@ else
 		end
 		% apply the sin^2 amplitude envelope to the stimulus
 		S = sin2array(S, stim.Ramp, outdev.Fs);
-		
+        
 		% build LR enable array
 		LRenable = [stim.LSpeakerEnable stim.RSpeakerEnable]';
-			
+        
 		% check if we need to reset the attenuators 
 		% (Freq, BW, ILD or ABI has changed)
  		if newstimFlag
@@ -259,8 +259,8 @@ else
 			% store the new values
 			handles.stim = stim;
 			guidata(hObject, handles);
- 		end
-
+        end
+        
 		% play the sound and return the response
 		[resp, rate] = handles.iofunction(S, handles.tdt.AcquirePoints, indev, outdev, zBUS);
 

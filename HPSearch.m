@@ -595,7 +595,7 @@ function CurveButton_Callback(hObject, eventdata, handles)
 		%-------------------------------------------------------
 		
 		% first build stimulus cache
-		[stimcache, curve.trialRandomSequence] = ...
+        [stimcache, curve.trialRandomSequence] = ...
 				HPCurve_buildStimCache(curve, stim, tdt, caldata, indev, outdev);
 		
 		% then run through the stimuli
@@ -1346,7 +1346,7 @@ function FreqMintext_Callback(hObject, eventdata, handles)
 %-------------------------------------------------------------------------
 function LSpeakerEnable_Callback(hObject, eventdata, handles)
 	handles.stim.LSpeakerEnable = read_ui_val(hObject);
-	guidata(hObject, handles);
+    guidata(hObject, handles);
 %-------------------------------------------------------------------------
 
 %-------------------------------------------------------------------------
