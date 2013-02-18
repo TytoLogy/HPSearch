@@ -49,7 +49,7 @@ function varargout = HPSearch(varargin)
 %------------------------------------------------------------------------
 %------------------------------------------------------------------------
 
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -190,7 +190,7 @@ function HPSearch_OpeningFcn(hObject, eventdata, handles, varargin)
 	if exist(handles.config.TDTLOCKFILE, 'file')
 		% if so, load it and check status of TDTINIT
 		load(handles.config.TDTLOCKFILE)
-		if TDTINIT
+		if TDTINIT %#ok<NODEF>
 			% if yes, see if user wants to override
 			usr_ans = query_user('ignore TDT lock');
 			if usr_ans
@@ -1480,7 +1480,7 @@ function RespScale_Callback(hObject, eventdata, handles)
 	end
 	set(handles.SpikeThreshold, 'Max', handles.analysis.respscale);
 	set(handles.SpikeThreshold, 'Min', -1*handles.analysis.respscale);
-	axes(handles.RespPlot);
+	axes(handles.RespPlot); %#ok<MAXES>
 	ylim(handles.analysis.respscale.*[-1 1]);
 	guidata(hObject, handles);
 %--------------------------------------------------------------------------
@@ -1497,7 +1497,7 @@ function RespScaleText_Callback(hObject, eventdata, handles)
 	set(handles.SpikeThreshold, 'Max', handles.analysis.respscale);
 	set(handles.SpikeThreshold, 'Min', -1*handles.analysis.respscale);
 	
-	axes(handles.RespPlot);
+	axes(handles.RespPlot); %#ok<MAXES>
 	ylim(handles.analysis.respscale.*[-1 1]);
 	guidata(hObject, handles);
 %--------------------------------------------------------------------------
