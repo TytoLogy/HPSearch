@@ -157,7 +157,7 @@ switch stype
 		out.MonitorGain = [0 100000];
 		out.HeadstageGain = [0 100000];
 		out.HPFreq = [0.001 20000];
-		out.LPFreq = [100 25000];
+		out.LPFreq = [100 35000];
 		out.TTLPulseDur = [1 100];
 		out.DeciFactor = [1 20];
 
@@ -193,7 +193,7 @@ switch stype
 		out.BW = 9000;
 		out.RadVary = 0;
 		out.Duration = gDuration;
-		out.Ramp = 5;
+		out.Ramp = 2;
 		out.Delay = gDelay;
 		out.Flo = floor(out.F - out.BW/2);
 		out.Fhi = ceil(out.F + out.BW/2);
@@ -485,7 +485,7 @@ switch stype
 		out.HPEnable = 1;                   % enable HP filter
 		out.HPFreq = 100;					% HP frequency (this was 200)
 		out.LPEnable = 1;					% enable LP filter
-		out.LPFreq = 25000;					% LP frequency (this was 10000)
+		out.LPFreq = 35000;					% LP frequency (this was 10000)
 		out.nChannels = 1;
 		out.InputChannel = zeros(out.nChannels, 1);
 		out.OutputChannel = [1 2];

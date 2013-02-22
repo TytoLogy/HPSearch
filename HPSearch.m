@@ -1543,7 +1543,7 @@ function SaveData_Callback(hObject, eventdata, handles)
 %-------------------------------------------------------------------------
 function LoadCal_Callback(hObject, eventdata, handles)
 	% open a dialog box to get calibration data file name and path
-	[filenm, pathnm] = uigetfile('*_cal.mat', ...
+	[filenm, pathnm] = uigetfile('*.cal', ...                   %'*_cal.mat', ...
 											'Load cal data...', ...
 											[handles.caldatapath filesep]);
 	
@@ -1629,7 +1629,7 @@ function LoadProtocol_Callback(hObject, eventdata, handles)
 %-------------------------------------------------------------------------
 function SaveProtocol_Callback(hObject, eventdata, handles)
 	% get an updated protocol by reading from the UI controls
-	protocol = readProtocolFromUI(handles);
+    protocol = readProtocolFromUI(handles);
 
 	% check if the user's settings/protocol path is valid
 	% if not, use the current directory

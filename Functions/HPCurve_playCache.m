@@ -192,7 +192,7 @@ function [curvedata, rawdata] = HPCurve_playCache(stimcache, datafile, curve, st
 		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 		PA5setatten(PA5{L}, atten(L));
 		PA5setatten(PA5{R}, atten(R));
-        
+		
 		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 		% play the sound and return the response
 		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

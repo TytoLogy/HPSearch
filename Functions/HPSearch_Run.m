@@ -239,7 +239,7 @@ else
 			else
 				spl_val = (stim.ABI * [1 1])';
 				% compute attenuator settings
-				if ~strcmp(stim.type, 'SAM')
+                if ~strcmp(stim.type, 'SAM')
 					[atten, spl_val] = figure_headphone_atten(spl_val, rms_val, ...
 																			caldata, LRenable);
 				else
