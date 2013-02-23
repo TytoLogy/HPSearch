@@ -157,7 +157,7 @@ switch stype
 		out.MonitorGain = [0 100000];
 		out.HeadstageGain = [0 100000];
 		out.HPFreq = [0.001 20000];
-		out.LPFreq = [100 35000];
+		out.LPFreq = [100 24000];	% NEURAL INPUT
 		out.TTLPulseDur = [1 100];
 		out.DeciFactor = [1 20];
 
@@ -483,9 +483,9 @@ switch stype
 		out.MonitorGain = 1000;				% monitor channel gain
 		out.decifactor = 1;					% factor to reduce input data sample rate
 		out.HPEnable = 1;                   % enable HP filter
-		out.HPFreq = 100;					% HP frequency (this was 200)
+		out.HPFreq = 100;						% HP frequency FOR NEURAL INPUT (this was 200)
 		out.LPEnable = 1;					% enable LP filter
-		out.LPFreq = 35000;					% LP frequency (this was 10000)
+		out.LPFreq = 10000;					% LP frequency FOR NEURAL INPUT (this was 10000)
 		out.nChannels = 1;
 		out.InputChannel = zeros(out.nChannels, 1);
 		out.OutputChannel = [1 2];
